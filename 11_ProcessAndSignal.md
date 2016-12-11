@@ -11,7 +11,7 @@ ref : [ps命令]()
 
 # 3. 启动新进程
 
-## system函数
+## 3.1 system函数
 
     # include <stdlib.h>
     
@@ -27,3 +27,227 @@ ref : [ps命令]()
 - 其他错误，返回-1
 - 执行成功，返回命令退出码
 
+### Demo
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_system.c>
+
+### PS
+
+不建议使用system函数启动其他进程，因为它需要先启动一个新的shell，这对shell安装情况和环境的依赖很大。
+
+函数的执行效率不高。
+
+## 3.2 exec 函数
+
+替换进程映像。把当前进程替换为一个新进程，新进程由path和file参数指定。可以通过exec从一个程序切换到另一个程序。
+
+    #include <unistd.h>
+    extern char **environ;
+    
+    int execl(const char *path, const char *arg, ...);
+    int execlp(const char *file, const char *arg, ...);
+    int execle(const char *path, const char *arg, ..., char * const envp[]);
+    
+    int execv(const char *path, char *const argv[]);
+    int execvp(const char *file, char *const argv[]);
+    int execve(const char *path, char *const argv[], char *const envp[]);
+    
+exec是一组函数，分为两大类：
+
+前三个参数可变，后三个参数固定。
+
+以字母p结尾的函数通过搜索PATH环境变量来查找新程序中可执行程序的位置。
+
+全局变量environ可以把一个值传递传递到新程序的环境变量中。
+
+### 返回值
+
+一般情况，exec不会返回，除非出现错误。出错时，exec返回-1，并且设置错误变量errno。
+
+### Demo
+
+常见的六种方式：
+
+    #include <unistd.h>
+    
+    char* const ps_argv[] = {"ps", "ax", NULL};
+    
+    char* const ps_envp[] = {"PATH=/bin:/usr/bin", "TERM=console", NULL};
+    
+    execl("/bin/ps", "ps", "ax", NULL);
+    execlp("ps", "ps", "ax", NULL);
+    execle("/bin/ps", "ps", "ax", NULL, ps_envp);
+    
+    execv("/bin/ps", ps_argv);
+    execvp("ps", ps_argv);
+    execve("/bin/ps", ps_argv, ps_envp);
+    
+ref:
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_execlp.c>
+
+### 注意：
+
+exec产生了一个新的程序，因此执行后只能看到新程序的输出，看不到之前程序中exec代码后面的执行情况。
+
+## 3.3 fork函数
+
+创建一个新进程，这个进程的配置完全复制父进程,它和父进程是同一份代码。fork与exec需要结合使用。
+
+    #include <sys/types.h>
+    #include <unistd.h>
+    
+    pid_t fork(void);
+    
+执行成功，返回新进程的PID；如果失败，返回-1。
+
+    pid_t new_pid = fork();
+    
+    switch(new_pid)
+    {
+        case -1: // Error
+        break;
+        case 0: // child
+        break;
+        default: // parent
+        break;
+    }
+
+### Demo
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_fork1.c>
+
+由于主进程提前结束，因此输出较乱。
+
+## 3.4 wait函数
+
+主进程可以通过wait等待子进程结束。
+
+    #include <sys/types.h>
+    #include <syst/wait.h>
+    
+    pid_t wait(int* stat_loc);
+    
+返回子进PID。
+
+如果stat_loc不是空指针，状态信息将会写在它指向的位置。解释状态信息宏：
+
+
+    WIFEXITED(stat_val)	    如果子进程正常结束，它就取一个非零值。
+    WEXITSTATUS(stat_val)	如果WIFEXITED非零，它返回子进程的退出码
+    WIFSIGNALED(stat_val)	如果子进程因为一个未捕获的信号而终止
+    WTERMSIG(stat_val)	    如果WIFSIGNALED非零，它返回一个信号代码
+    WIFSTOPPED(stat_val)	如果子进程意外终止，它就取一个非零值
+    WSTOPSIG(stat_val)	    如果WIFSTOPPED非零，它返回一个信号代码
+
+### Demo
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_wait.c>
+
+### 子进程销毁条件
+
+- 父进程正常结束
+- 父进程通过wait得到子进程结束状态
+
+否则会产生僵尸进程。
+
+## 3.5 waitpid函数
+
+等待某个特定进程。
+
+# 4. 信号
+
+## 4.1 介绍
+
+信号是进程间传递信息的重要方式。
+
+信号名称在signal.h中定义：
+
+    01 SIGHUP 挂起（hangup）
+    02 SIGINT 中断，当用户从键盘按^c键或^break键时
+    03 SIGQUIT 退出，当用户从键盘按quit键时
+    04 SIGILL 非法指令
+    05 SIGTRAP 跟踪陷阱（trace trap），启动进程，跟踪代码的执行
+    06 SIGIOT IOT指令
+    07 SIGEMT EMT指令
+    08 SIGFPE 浮点运算溢出
+    09 SIGKILL 杀死、终止进程 
+    10 SIGBUS 总线错误
+    11 SIGSEGV 段违例（segmentation  violation），进程试图去访问其虚地址空间以外的位置
+    12 SIGSYS 系统调用中参数错，如系统调用号非法
+    13 SIGPIPE 向某个非读管道中写入数据
+    14 SIGALRM 闹钟。当某进程希望在某时间后接收信号时发此信号
+    15 SIGTERM 软件终止（software  termination）
+    16 SIGUSR1 用户自定义信号1
+    17 SIGUSR2 用户自定义信号2
+    18 SIGCLD 某个子进程死
+    19 SIGPWR 电源故障 
+
+## 4.2 signal函数
+
+    #include <signal.h>
+    void (*signal(int sig, void (*func)(int)))(int);
+    
+通过它处理信号。
+
+这个函数已经过时，不建议继续使用。
+
+### Demo
+
+处理Ctrl + c信号。
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_signal.c>
+
+第一次按下Ctrl+c，ouch捕获，设置为默认。第二次按下结束。
+
+## 4.3 发送信号
+
+### kill
+
+    #incluld <sys/types.h>
+    #include <signal.h>
+    
+    int kill(pid_t pid, int sig);
+    
+把信号sig发给进程pid。
+
+### alarm
+
+    #include <unistd.h>
+    
+    unsigned int alarm(unsigned int seconds);
+
+安排在seconds之后安排一个SIGALRM信号。
+
+### pause
+
+    #include <unistd.h>
+    
+    int pause(void);
+    
+把程序挂起到收到一个信号为止。
+    
+### Demo
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_alarm.c>
+
+## 4.4 sigaction函数
+
+    #include <signal.h>
+    
+    int sigaction(int sig, const struct sigaction* act, struct sigaction* oact);
+    
+推荐使用的信号接口。用来替代signal函数。
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_sigaction.c>
+
+按下组合件Ctrl+C能够看到捕获信号，但程序仍然进行。按下Ctrl+\程序结束。
+
+## 4.5 信号集
+
+    #include <signal.h>
+    
+    int sigaddset(sigset_t* set, int signo);
+    int sigemptyset(sigset_t* set);
+    int sigfillset(sigset_t* set);
+    int sigdelset(sigset_t* set, int signo);
