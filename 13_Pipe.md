@@ -79,7 +79,7 @@ popen在启动另一个进程时，通过启动一个新shell解析command命令
 
 写到file_descriptor[1]的所有数据都可以从file_descriptor[0]读回来。依据FIFO原则。
 
-![Pipe]()
+![Pipe](https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/pipe.png)
 
 *注意：*这里使用的文件描述符不是文件流，因此不能使用fread和fwrite处理数据，需要使用底层的read和write方法。
 
