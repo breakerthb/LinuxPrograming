@@ -31,7 +31,8 @@ int main()
 
     signal(SIGCHLD, SIG_IGN);
 
-    while(1) {
+    while(1) 
+    {
         char ch;
 
         printf("server waiting\n");
@@ -45,7 +46,8 @@ int main()
 /*  Fork to create a process for this client and perform a test to see
     whether we're the parent or the child.  */
 
-        if(fork() == 0) {
+        if(fork() == 0) 
+        {
 
 /*  If we're the child, we can now read/write to the client on client_sockfd.
     The five second delay is just for this demonstration.  */
@@ -60,7 +62,8 @@ int main()
 
 /*  Otherwise, we must be the parent and our work for this client is finished.  */
 
-        else {
+        else 
+        {
             close(client_sockfd);
         }
     }

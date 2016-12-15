@@ -25,7 +25,8 @@ int main(int argc, char *argv[])
 /*  Find the host address and report an error if none is found.  */
 
     hostinfo = gethostbyname(host);
-    if(!hostinfo) {
+    if(!hostinfo) 
+    {
         fprintf(stderr, "no host: %s\n", host);
         exit(1);
     }
@@ -33,7 +34,8 @@ int main(int argc, char *argv[])
 /*  Check that the daytime service exists on the host.  */
 
     servinfo = getservbyname("daytime", "tcp");
-    if(!servinfo) {
+    if(!servinfo) 
+    {
         fprintf(stderr,"no daytime service\n");
         exit(1);
     }
@@ -53,7 +55,8 @@ int main(int argc, char *argv[])
 /*  ...then connect and get the information.  */
 
     result = connect(sockfd, (struct sockaddr *)&address, len);
-    if(result == -1) {
+    if(result == -1) 
+    {
         perror("oops: getdate");
         exit(1);
     }

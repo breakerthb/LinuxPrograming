@@ -2,7 +2,7 @@
 
 # 1. 套接字连接
 
-## Demo
+### Demo 1
 
 - 一个简单的本地客户
 
@@ -116,4 +116,191 @@ listent队列长度设为backlog,等待处理的个数不能超过这个值。
 通过close函数来终止套接字连接。
 
 ## 1.9 套接字通信
+
+- 文件套接字：需要创建一个Server和Client都能访问到的文件
+- 网络套接字：只需要IP和端口即可
+
+一般推荐使用网络套接字
+
+### Demo2
+
+网络套接字
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/client2.c>
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/server2.c>
+
+*注意：*请不要把这段代码用到你的程序中。
+
+## 1.10 主机字节序和网络字节序
+
+一般用netstat命令查看网络连接状况：
+
+    $ netstat -A inet
+    
+由于不同计算机的网络字节序不同，我们需要将它们进行统一。
+
+    # include <netinet/in.h>
+    
+    unsigned long int htonl(unsigned long int hostlong);
+    unsigned short int htonl(unsigned short int hostshort);
+    unsigned long int ntohl(unsigned long int netlong);
+    unsigned short int ntohs(unsigned short int netshort);
+    
+
+### Demo3
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/client3.c>
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/server3.c>
+
+- server端
+
+    server_address.sin_addr.s_addr = htonl(INADDR_ANY);
+    server_address.sin_port = htons(9734);
+
+- client端
+
+    address.sin_port = htons(9734);
+    
+# 2 网络信息
+
+主机数据库函数
+
+    #include <netdb.h>
+    
+    struct hostent *gethostbyaddr(const void *addr, size_t len, int type);
+    struct hostent *gethostbyname(const char *name);
+    
+    struct hostent{
+        char *h_name;
+        char **h_aliases;
+        int h_addrtype;
+        int h_length;
+        char **h_addr_list;
+    };
+    
+如果没有我们要查询的数据，这些信息会返回一个空指针。
+
+与服务及其端口号有关的信息也可以通过一些服务信息函数来获取。
+
+    #include <netdb.h>
+    
+    struct servent *getservbyname(const char* name, const char* proto);
+    struct servent *getservbyport(int port, const char *proto);
+    
+proto指定用于连接该服务的协议，tcp或udp.
+
+    struct servent{
+        char *s_name;
+        char **s_aliases;
+        int s_port;
+        char *s_proto;
+    };
+    
+注意：返回地址列表要转换为正确的地址类型，并用函数inet_ntoa将它从网络字节序转换为可打印字节序。
+
+    #include <arpa/inet.h>
+    
+    char *inet_ntoa(struct in_addr in);
+    
+这个函数将一个网络地址转换成点分十进制字符串。
+
+    #include <unistd.h>
+    
+    int gethostname(char *name, int namelength);
+    
+### Demo4
+
+获取一台主机的相关信息。
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/getname.c>
+
+运行：
+
+    $ ./getname localhost
+
+### Demo5
+
+连接到标准服务
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/getdate.c>
+
+运行：
+
+    $ ./getdate localhost
+    
+可以用它得到任何主机的时间信息。
+
+## 2.1 因特网守护进程
+
+
+## 2.2 套接字选项
+
+你可以用很多选项来控制套接字行为。
+
+    #include <sys/socket.h>
+    
+    int setsockopt(int socket, int level, int option_name, const void* option_value, size_t option_len);
+    
+setsockopt用来控制这些套接字选项。
+
+# 3. 多客户
+
+### Demo 6
+
+可以同时服务多个客户的服务器
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/client4.c>
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/server4.c>
+
+## 3.1 select系统调用
+
+select系统调用允许程序同时在多个底层文件描述符上等待输入的到达。
+
+select对数据结构fd_set进行操作，下面的宏定义处理这些集合。
+
+    #include <sys/types.h>
+    #include <sys/time.h>
+    
+    void FD_ZERO(fd_set *fdset);
+    void FD_CLR(int fd, fd_set *fdset);
+    void FD_SET(int fd, fd_set *fdset);
+    int FD_ISSET(int fd, fd_set *fdset);
+    
+select函数可以用一个超时值来防止无限阻塞。
+
+    struct timeval{
+        time_t tv_sec;
+        long tv_usec;
+    };
+    
+select函数：
+
+    #include <sys/types.h>
+    #include <sys/time.h>
+    
+    int select(int nfds, fd_set *readfds, fd_set *writefds,
+                fd_set *errorfds, struct timeval *timeout);
+                
+
+### Demo 7
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/select.c>
+
+## 3.2 多客户
+
+### Demo 8
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/server5.c>
+
+运行：
+
+    $ ./server5 &
+    $ ./client3 & ./client3 & ./client3 & ps x
+
+# 4. 数据报
+
+UDP方式连接
 

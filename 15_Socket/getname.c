@@ -15,29 +15,34 @@ int main(int argc, char *argv[])
 /*  Set the host in question to the argument supplied with the getname call,
     or default to the user's machine.  */
 
-    if(argc == 1) {
+    if(argc == 1) 
+    {
         char myname[256];
         gethostname(myname, 255);
         host = myname;
     }
     else
+    {
         host = argv[1];
-
+    }
+    
 /*  Make the call to gethostbyname and report an error if no information is found.  */
 
     hostinfo = gethostbyname(host);
-    if(!hostinfo) {
+    if(!hostinfo) 
+    {
         fprintf(stderr, "cannot get info for host: %s\n", host);
         exit(1);
     }
 
 /*  Display the hostname and any aliases it may have.  */
-
+    // 显示主机名和所有别名
     printf("results for host %s:\n", host);
     printf("Name: %s\n", hostinfo -> h_name);
     printf("Aliases:");
     names = hostinfo -> h_aliases;
-    while(*names) {
+    while(*names) 
+    {
         printf(" %s", *names);
         names++;
     }
@@ -45,7 +50,8 @@ int main(int argc, char *argv[])
 
 /*  Warn and exit if the host in question isn't an IP host.  */
 
-    if(hostinfo -> h_addrtype != AF_INET) {
+    if(hostinfo -> h_addrtype != AF_INET) 
+    {
         fprintf(stderr, "not an IP host!\n");
         exit(1);
     }
@@ -53,7 +59,8 @@ int main(int argc, char *argv[])
 /*  Otherwise, display the IP address(es).  */
 
     addrs = hostinfo -> h_addr_list;
-    while(*addrs) {
+    while(*addrs) 
+    {
         printf(" %s", inet_ntoa(*(struct in_addr *)*addrs));
         addrs++;
     }
