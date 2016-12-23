@@ -50,6 +50,7 @@ void *thread_function(void *arg)
     printf("thread_function is running. Argument was %d\n", my_number);
     rand_num = 1 + (int)(9.0*rand() / (RAND_MAX+1.0));
     sleep(rand_num);
+    
     printf("Bye from %d\n", my_number);
     pthread_exit(NULL);
 }

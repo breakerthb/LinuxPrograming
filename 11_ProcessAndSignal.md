@@ -7,7 +7,7 @@
 
 # 2. 进程查看
 
-ref : [ps命令]()
+ref : [任务管理](https://www.zybuluo.com/breakerthb/note/429591)
 
 # 3. 启动新进程
 
@@ -154,6 +154,32 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
 ## 3.5 waitpid函数
 
 等待某个特定进程。
+
+    #include <sys/types.h>
+    #include <sys/wait.h>
+    
+    pid_t waitpid(pid_t pid, int *stat_loc, int options);
+    
+- pid
+
+进程PID,如果为-1，返回任一子进程信息
+
+- stat_loc
+
+如果不为空，得到返回信息状态
+
+- options
+
+用来改变waitpid的行为。最有用的是WNOHANG，防止waitpid调用将调用者的执行挂起。
+如果需要周期性的检查，则用下面语句：
+
+    waitpid(child_pid, (int*)0, WNOHANG);
+
+这样不会挂起，如果子进程没有结束或意外终止，返回0，否则返回child_pid。如果失败，返回-1.
+
+## 3.6 输入输出重定向
+
+
 
 # 4. 信号
 
