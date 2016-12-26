@@ -6,11 +6,11 @@
 
 - 一个简单的本地客户
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/client1.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket/client1.c>
 
 - 一个简单的服务器
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/server1.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket/server1.c>
 
 运行：
 
@@ -126,9 +126,9 @@ listent队列长度设为backlog,等待处理的个数不能超过这个值。
 
 网络套接字
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/client2.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket/client2.c>
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/server2.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket/server2.c>
 
 *注意：*请不要把这段代码用到你的程序中。
 
@@ -150,9 +150,11 @@ listent队列长度设为backlog,等待处理的个数不能超过这个值。
 
 ### Demo3
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/client3.c>
+- 使用网络字节序统一端口号
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/server3.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket/client3.c>
+
+<https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket/server3.c>
 
 - server端
 
@@ -214,7 +216,7 @@ proto指定用于连接该服务的协议，tcp或udp.
 
 获取一台主机的相关信息。
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/getname.c>
+<https://github.com/breakerthb/LinuxPrograming/master/15_Socket/getname.c>
 
 运行：
 
@@ -224,7 +226,7 @@ proto指定用于连接该服务的协议，tcp或udp.
 
 连接到标准服务
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/getdate.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket/getdate.c>
 
 运行：
 
@@ -249,11 +251,12 @@ setsockopt用来控制这些套接字选项。
 
 ### Demo 6
 
-可以同时服务多个客户的服务器
+可以同时服务多个客户的服务器:
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/client4.c>
+- 服务器fork新的子进程提供服务，保证一直处于监听状态
+- 提供服务加入5s延迟
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/server4.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket/server4.c>
 
 ## 3.1 select系统调用
 
@@ -287,13 +290,13 @@ select函数：
 
 ### Demo 7
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/select.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket/select.c>
 
 ## 3.2 多客户
 
 ### Demo 8
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/15_Socket/server5.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket/server5.c>
 
 运行：
 

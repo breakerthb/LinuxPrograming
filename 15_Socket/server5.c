@@ -42,7 +42,8 @@ int main()
     Since we have passed a null pointer as the timeout parameter, no timeout will occur.
     The program will exit and report an error if select returns a value of less than 1.  */
 
-    while(1) {
+    while(1)
+    {
         char ch;
         int fd;
         int nread;
@@ -61,13 +62,16 @@ int main()
 /*  Once we know we've got activity,
     we find which descriptor it's on by checking each in turn using FD_ISSET.  */
 
-        for(fd = 0; fd < FD_SETSIZE; fd++) {
-            if(FD_ISSET(fd,&testfds)) {
+        for(fd = 0; fd < FD_SETSIZE; fd++) 
+        {
+            if(FD_ISSET(fd,&testfds)) 
+            {
 
 /*  If the activity is on server_sockfd, it must be a request for a new connection
     and we add the associated client_sockfd to the descriptor set.  */
 
-                if(fd == server_sockfd) {
+                if(fd == server_sockfd)
+                {
                     client_len = sizeof(client_address);
                     client_sockfd = accept(server_sockfd, 
                         (struct sockaddr *)&client_address, &client_len);
@@ -79,7 +83,8 @@ int main()
     If close is received, the client has gone away and we remove it from the descriptor set.
     Otherwise, we 'serve' the client as in the previous examples.  */
 
-                else {
+                else 
+                {
                     ioctl(fd, FIONREAD, &nread);
 
                     if(nread == 0) {

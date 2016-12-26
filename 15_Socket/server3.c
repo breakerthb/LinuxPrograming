@@ -30,7 +30,8 @@ int main()
 /*  Create a connection queue and wait for clients.  */
 
     listen(server_sockfd, 5);
-    while(1) {
+    while(1) 
+    {
         char ch;
 
         printf("server waiting\n");
