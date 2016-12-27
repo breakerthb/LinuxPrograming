@@ -27,11 +27,11 @@
 
 从另一个进程读入数据。
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_popen1.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_popen1.c>
 
 # 2. 将输出送往popen
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_popen2.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_popen2.c>
 
 相当于:
 
@@ -41,7 +41,7 @@
 
 通过多次调用fread从另一个进程多次读入数据。
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_popen3.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_popen3.c>
 
 程序中每次读取"BUFSIZ / 10"，因为BUFSIZ太大，一次就能读入全部数据。
 
@@ -57,7 +57,7 @@ popen在启动另一个进程时，通过启动一个新shell解析command命令
 
 启动Shell的方式不够经济
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_popen4.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_popen4.c>
 
 这个Demo执行效率不如：
 
@@ -87,13 +87,13 @@ popen在启动另一个进程时，通过启动一个新shell解析command命令
 
 利用pipe传递数据
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_pipe1.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_pipe1.c>
 
 *注意：*pipe传递数据的方向只能是file_descriptor[1]到file_descriptor[0],反之会出现各种意想不到的错误。
 
 ## 进程间数据传递
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_pipe2.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_pipe2.c>
 
 # 4. 父进程和子进程
 
@@ -103,13 +103,13 @@ popen在启动另一个进程时，通过启动一个新shell解析command命令
 
 - demo_pipe3.c 数据生产者
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_pipe3.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_pipe3.c>
 
 
 
 - demo_pipe4.c 数据消费者
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_pipe4.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_pipe4.c>
 
 ## 4.1 管道关闭后的读操作
 
@@ -133,7 +133,7 @@ dup调用创建的新文件描述符与作为参数的那个已有文件描述�
     文件描述符 2    标准错误输出
     文件描述符 3    管道文件描述符
     
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_pipe5.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_pipe5.c>
 
 demo_pipe5.c流程：
 
@@ -179,7 +179,7 @@ demo_pipe5.c流程：
         exit(EXIT_SUCCESS);
     }
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_fifo1.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_fifo1.c>
 
 执行上面的程序，之后可以在命令行查找FIFO文件：
 
@@ -216,7 +216,7 @@ open会被阻塞，直到另一个程序读方式打开FIFO文件为止。
 
 立刻返回，如果没有读方式打开，则返回一个错误。
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_fifo2.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_fifo2.c>
 
 ## 5.2 对FIFO进行读写操作
 
@@ -228,20 +228,20 @@ open会被阻塞，直到另一个程序读方式打开FIFO文件为止。
 
 创建管道，向管道写入数据
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_fifo3.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_fifo3.c>
 
 - 消费者程序 demo_fifo4.c
 
 从管道读取数据并丢弃
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/demo_fifo4.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/demo_fifo4.c>
 
 先执行程序demo_fifo3,再执行程序demo_fifo4.
 
 # 6. 使用FIFO的客户/服务器应用
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/server.c>
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/13_Pipe/client.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/server.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe/client.c>
 
 执行：
 

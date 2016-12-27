@@ -307,3 +307,8 @@ select函数：
 
 UDP方式连接
 
+# Socket通信
+
+参考：<https://github.com/breakerthb/Tinyhttpd/tree/reuse>
+
+从开源项目中提炼出的Socket服务器。

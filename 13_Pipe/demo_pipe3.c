@@ -35,6 +35,6 @@ int main()
             printf("%d - wrote %d bytes\n", getpid(), data_processed);
         }
     }
-    exit(EXIT_SUCCESS);
+        exit(EXIT_SUCCESS);
 }
 
