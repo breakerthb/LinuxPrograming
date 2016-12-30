@@ -28,6 +28,10 @@ int main()
         sleep(5);
         kill(getppid(), SIGALRM); //getppid()得到父进程PID
         exit(0);
+        break;
+    default:
+        // Do nothing
+        break;
     }
     
     printf("waiting for alarm to go off\n");

@@ -29,7 +29,7 @@ ref : [任务管理](https://www.zybuluo.com/breakerthb/note/429591)
 
 ### Demo
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_system.c>
+<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_system.c>
 
 ### PS
 
@@ -84,11 +84,19 @@ exec是一组函数，分为两大类：
     
 ref:
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_execlp.c>
+<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_execlp.c>
 
 ### 注意：
 
+- 新进程替换旧进程
+
 exec产生了一个新的程序，因此执行后只能看到新程序的输出，看不到之前程序中exec代码后面的执行情况。
+
+- 前两个参数
+
+前两个参数都是被调用的程序名称，不同的是第一个参数要表明路径，第二个参数只是程序名。
+
+    execl("./abc", "abc", "param_1", "param_2", NULL);
 
 ## 3.3 fork函数
 
@@ -115,7 +123,7 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
 
 ### Demo
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_fork1.c>
+<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_fork1.c>
 
 由于主进程提前结束，因此输出较乱。
 
@@ -142,7 +150,7 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
 
 ### Demo
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_wait.c>
+<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_wait.c>
 
 ### 子进程销毁条件
 
@@ -179,7 +187,46 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
 
 ## 3.6 输入输出重定向
 
+通过exec调用实现一个过滤程序。
 
+- demo_upper.c
+
+实现一个把小写字母转换成大写字母的过滤程序
+
+<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_upper.c>
+
+执行：
+
+    $ ./run_upper
+    hello ABC
+    HELLO ABC
+    ^C
+
+或
+
+    $ ./run_upper < file.txt
+
+通过另一个程序调用。
+
+- demo_useupper.c
+
+通过exec来调用run_upper程序实现参数过滤。
+
+<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_useupper.c>
+
+执行：
+
+    $ ./run_useupper file.txt
+    
+- demo_multi_useupper.c
+
+通过子进程来同时完成多个exec调用。
+
+<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_multi_useupper.c>
+
+执行：
+
+    $ ./run_multi_useupper file.txt file.txt
 
 # 4. 信号
 
@@ -222,7 +269,7 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
 
 处理Ctrl + c信号。
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_signal.c>
+<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_signal.c>
 
 第一次按下Ctrl+c，ouch捕获，设置为默认。第二次按下结束。
 
@@ -255,7 +302,12 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
     
 ### Demo
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_alarm.c>
+- fork一个子进程
+- 安排好消息捕获后暂停
+- 子进程sleep5秒后向父进程发送一个SIGALRM信号
+- 父进程收到一个信号后继续运行
+
+<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_alarm.c>
 
 ## 4.4 sigaction函数
 
@@ -265,7 +317,7 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
     
 推荐使用的信号接口。用来替代signal函数。
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/11_ProceeAndSignal/demo_sigaction.c>
+<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_sigaction.c>
 
 按下组合件Ctrl+C能够看到捕获信号，但程序仍然进行。按下Ctrl+\程序结束。
 

@@ -4,7 +4,7 @@
 CLIENTS=client1 client2 client3
 SERVERS=server1 server2 server3 server4 server5
 INFO=getname getdate getdate-udp
-SELECT=select
+SELECT=select select_timer
 
 CFLAGS=-g
 LDFLAGS=-g

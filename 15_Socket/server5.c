@@ -51,10 +51,11 @@ int main()
         testfds = readfds;
 
         printf("server waiting\n");
-        result = select(FD_SETSIZE, &testfds, (fd_set *)0, 
-            (fd_set *)0, (struct timeval *) 0);
+        result = select(FD_SETSIZE, &testfds, (fd_set*)0, 
+            (fd_set*)0, (struct timeval*) 0);
 
-        if(result < 1) {
+        if(result < 1) 
+        {
             perror("server5");
             exit(1);
         }

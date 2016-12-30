@@ -13,3 +13,9 @@ gcc -o run_signal demo_signal.c
 gcc -o run_alarm demo_alarm.c
 
 gcc -o run_sigaction demo_sigaction.c
+
+gcc -o run_upper demo_upper.c
+
+gcc -o run_useupper demo_useupper.c
+
+gcc -o run_multi_useupper demo_multi_useupper.c

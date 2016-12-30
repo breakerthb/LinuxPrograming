@@ -9,6 +9,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#define STDIN 0
+
 int main()
 {
     char buffer[128];
@@ -18,21 +20,23 @@ int main()
     struct timeval timeout;
 
     FD_ZERO(&inputs);
-    FD_SET(0,&inputs);
+    FD_SET(STDIN, &inputs);
 
 /*  Wait for input on stdin for a maximum of 2.5 seconds.  */
 
-    while(1) {
+    while(1) 
+    {
         testfds = inputs;
         timeout.tv_sec = 2;
         timeout.tv_usec = 500000;
 
-        result = select(FD_SETSIZE, &testfds, (fd_set *)0, (fd_set *)0, &timeout);
+        result = select(FD_SETSIZE, &testfds, (fd_set*)0, (fd_set*)0, &timeout);
 
 /*  After this time, we test result. If there has been no input, the program loops again.
     If there has been an error, the program exits.  */
 
-        switch(result) {
+        switch(result) 
+        {
         case 0:
             printf("timeout\n");
             break;
@@ -45,13 +49,15 @@ int main()
     until that input is Ctrl-D.  */
 
         default:
-            if(FD_ISSET(0,&testfds)) {
-                ioctl(0,FIONREAD,&nread);
-                if(nread == 0) {
+            if(FD_ISSET(STDIN, &testfds)) 
+            {
+                ioctl(0, FIONREAD, &nread);
+                if(nread == 0) 
+                {
                     printf("keyboard done\n");
                     exit(0);
                 }
-                nread = read(0,buffer,nread);
+                nread = read(0, buffer, nread);
                 buffer[nread] = 0;
                 printf("read %d from keyboard: %s", nread, buffer);
             }
