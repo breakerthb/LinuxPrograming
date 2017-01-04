@@ -113,11 +113,13 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
     
     switch(new_pid)
     {
-        case -1: // Error
+    case -1: // Error
         break;
-        case 0: // child
+    case 0: // child
+        // 这里的new_pid是0
         break;
-        default: // parent
+    default: // parent
+        // 这里的new_pid是子进程的pid
         break;
     }
 
