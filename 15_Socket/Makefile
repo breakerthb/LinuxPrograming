@@ -9,7 +9,7 @@ SELECT=select select_timer
 CFLAGS=-g
 LDFLAGS=-g
 
-ALL= $(CLIENTS) $(SERVERS) $(INFO) $(SELECT)
+ALL= $(CLIENTS) $(SERVERS) $(INFO) $(SELECT) 
 
 all: $(ALL)
 

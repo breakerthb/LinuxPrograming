@@ -239,8 +239,8 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
 信号名称在signal.h中定义：
 
     01 SIGHUP 挂起（hangup）
-    02 SIGINT 中断，当用户从键盘按^c键或^break键时
-    03 SIGQUIT 退出，当用户从键盘按quit键时
+    02 SIGINT 中断，当用户从键盘按Ctrl+C键或^break键时
+    03 SIGQUIT 退出，当用户从键盘按Ctrl+\键时
     04 SIGILL 非法指令
     05 SIGTRAP 跟踪陷阱（trace trap），启动进程，跟踪代码的执行
     06 SIGIOT IOT指令
@@ -257,6 +257,7 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
     17 SIGUSR2 用户自定义信号2
     18 SIGCLD 某个子进程死
     19 SIGPWR 电源故障 
+    20 SIGSTP   Ctrl + z
 
 ## 4.2 signal函数
 
