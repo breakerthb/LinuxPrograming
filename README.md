@@ -47,8 +47,8 @@
 ## Keywords List
 
 [select()](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/select.md)  
-[poll()](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/poll.md) 
-[poll()](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/epoll.md)   
+[poll()](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/poll.md)  
+[epoll()](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/epoll.md)   
 
 [Effective C++](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/EffectiveC.md)   
 
