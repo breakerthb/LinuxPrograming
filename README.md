@@ -50,6 +50,8 @@
 [poll()](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/poll.md) 
 [poll()](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/epoll.md)   
 
+[Effective C++](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/EffectiveC.md)   
+
 ## Special Subject
 
 [C/C++获取时间方法](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/Time.md)  
