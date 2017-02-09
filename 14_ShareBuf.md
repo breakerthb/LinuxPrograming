@@ -8,6 +8,8 @@ IPC(Inter-Process Communicate 进程间通信)机制：
 - 共享内存
 - 消息队列
 
+![](https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/PIC/ipc.png)
+
 # 1. 信号量
 
 它是一个特殊的变量，只允许对他进行等待(wait)和发送信号(signal)这两种操作。用下面的符号表示这两种操作：
