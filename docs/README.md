@@ -10,13 +10,13 @@
 |第6章|[]()||  
 |第7章|[]()||  
 |第8章|[]()||  
-|第9章|[开发工具 Makefile](https://github.com/breakerthb/LinuxPrograming/blob/master/09_Makefile.md)||  
+|第9章|[Makefile](https://github.com/breakerthb/LinuxPrograming/blob/master/09_Makefile.md)|开发工具 Makefile 使用|  
 |第10章|[]()||  
-|第11章|[进程和信号](https://github.com/breakerthb/LinuxPrograming/blob/master/11_ProcessAndSignal.md)||  
-|第12章|[POSIX线程](https://github.com/breakerthb/LinuxPrograming/blob/master/12_Thread.md)||    
+|第11章|[进程和信号](https://github.com/breakerthb/LinuxPrograming/blob/master/11_ProcessAndSignal.md)|system/exec/fork/wait/waitpid/signal/kill/pause/sigaction|  
+|第12章|[POSIX线程](https://github.com/breakerthb/LinuxPrograming/blob/master/12_Thread.md)|多线程编程|    
 |第13章|[管道](https://github.com/breakerthb/LinuxPrograming/blob/master/13_Pipe.md)||  
-|第14章|[进程间通信(信号量、共享内存和消息队列)](https://github.com/breakerthb/LinuxPrograming/blob/master/14_ShareBuf.md)||  
-|第15章|[套接字](https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket.md)||  
+|第14章|[进程间通信](https://github.com/breakerthb/LinuxPrograming/blob/master/14_ShareBuf.md)|信号量/共享内存/消息队列|  
+|第15章|[套接字](https://github.com/breakerthb/LinuxPrograming/blob/master/15_Socket.md)|Socket|  
 |第16章|[]()||  
 |第17章|[]()||  
 |第18章|[]()||  
