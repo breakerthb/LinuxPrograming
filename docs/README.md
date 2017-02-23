@@ -3,7 +3,7 @@
 ||||
 |:--:|:--:|:--:|
 |第1章|[-]()||
-|第2章|shell程序设计|| 
+|第2章|[Shell](https://github.com/breakerthb/LinuxPrograming/blob/master/02_Shell.md)|Shell程序设计| 
 |第3章|[文件操作](https://github.com/breakerthb/LinuxPrograming/blob/master/03_FileOperate.md)|open/close/read/write/ioctl|
 |第4章|Linux环境||  
 |第5章|终端||  
