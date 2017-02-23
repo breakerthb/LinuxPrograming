@@ -156,29 +156,32 @@ EG ：检查文件是否存在
 
 - 1. 判断参数为空
 
+$1为第一个参数
 
-    para=$1
-    
-    if [ ! $para ]; then
+        para=$1
+        
+        if [ ! $para ]; then
             echo "IS NULL"
-    else
+        else
             echo "NOT NULL"
-    fi
+        fi
     
-    或
+或
     
-    if [ -z $1 ];then
-        echo "-----------------------------------------------"
-        echo "If you want to build the sysbench"
-        echo "Please input the parameter : sysbench"
-        echo "And if you want to build the trxtest"
-        echo "Please input the parameter : trxtest"
-        echo "Eg:"
-        echo "    ./build.sh sysbench or ./build.sh trxtest"
-        echo "-----------------------------------------------"
     
+        if [ -z $1 ];then
+            echo "-----------------------------------------------"
+            echo "If you want to build the sysbench"
+            echo "Please input the parameter : sysbench"
+            echo "And if you want to build the trxtest"
+            echo "Please input the parameter : trxtest"
+            echo "Eg:"
+            echo "    ./build.sh sysbench or ./build.sh trxtest"
+            echo "-----------------------------------------------"
+            
             exit 0
-    fi
+        fi
+
 
 - 2. 判断参数个数
 
