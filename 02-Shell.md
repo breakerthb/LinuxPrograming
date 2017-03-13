@@ -248,7 +248,7 @@ $#参数个数
         statements
     done
     
-- 固定字符串循环
+固定字符串循环
 
 
     for foo in bar fud 43
@@ -256,7 +256,7 @@ $#参数个数
         echo $foo
     done
     
-- 通配符扩展
+通配符扩展
 
 
     for file in $(ls f*.sh)
@@ -339,35 +339,79 @@ eg
 
 ## 3.6 命令的执行
 
+    `` 方法
+    $(...) 方法
+    
+建议使用后者
 
+### i. 算术扩展
+
+比expr命令效率更高的方法
+
+    x=0
+    x=$(($x+1))
+
+### ii. 参数扩展
+
+    for i in 1 2; do
+        process $i_tmp
+    done
     
+这样写会报错，因为$i_tmp被认为是一个变量，并不存在。正确写法：
+
+    for i in 1 2; do
+        process ${i}_tmp
+    done
     
+变量i的值在脚本中会替换${i},从而产生正确的参数。
+
+
+常见的参数扩展方法：
+
+|参数扩展|说明|
+|:--:|:--:|
+|${param:-default}|如果param为空，设为default|
+|${#param}|param的长度|
+|${param%word}|从param的尾部开始删除与word匹配的最小部分，返回剩余部分|
+|${param%%word}|从param的尾部开始删除与word匹配的最长部分，返回剩余部分|
+|${param#word}|从param的头部开始删除与word匹配的最小部分，返回剩余部分|
+|${param##word}|从param的头部开始删除与word匹配的最长部分，返回剩余部分|
+
+
+Demo：
+
+        #!/bin/sh
+        
+        unset foo
+        echo ${foo:-bar}
+        
+        foo=fud
+        echo ${foo:-bar}
+        
+        foo=/usr/bin/X11/startx
+        echo ${foo#*/}
+        echo ${foo##*/}
+        
+        bar=/usr/local/etc/local/networks
+        echo ${bar%local*}
+        echo ${bar%%local*}
     
+## 3.7 here文档
+
+## 3.8 调试脚本程序
+
+## 3.9 dialog工具
+
+# 4. 常用Script
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-# 常用Script
-    
-打印当前目录
+## 4.1 打印当前目录
 
     for i in `ls -a`
     do
           echo $i
     done
 
-2. while
-常用
-1.Every 100 seconds run a time
-
+## 4.2 Every 100 seconds run a time
 
     time1=`date +%s%N|cut -c1-13`
     while true; do
@@ -381,44 +425,36 @@ eg
         fi
     done
 
-2. 打印时间
+## 4.3 打印时间
 
-  para=$1
+        para=$1
+        
+        curtime=`date "+%Y-%m-%d %H:%M:%S"`
+        
+        if [ ! $para ]; then
+            echo "Current Time : $curtime"
+        elif [ "$para" == "start"  ];then
+            echo "Start Time : $curtime"
+        elif [ "$para" == "end"  ];then
+            echo "End Time : $curtime"
+        else
+            echo "Current Time : $curtime"
+        fi
 
-  curtime=`date "+%Y-%m-%d %H:%M:%S"`
+## 4.4. 在所有子目录的Makefile中替换字串
 
-  if [ ! $para ]; then
-	          echo "Current Time : $curtime"
-  elif [ "$para" == "start"  ];then
-	         echo "Start Time : $curtime"
-  elif [ "$para" == "end"  ];then
-	          echo "End Time : $curtime"
-  else
-          echo "Current Time : $curtime"
-  fi
+    sed -i 's/XX = g++/XX = g++ -pg/g' `find | grep "Makefile$"` 
+    sed -i 's/XX = g++/XX = g++ -DMULTI_STREAM/g' Makefile 
 
-3. 在所有子目录的Makefile中替换字串
+## 4.5 等待程序执行完再继续
 
-sed -i 's/XX = g++/XX = g++ -pg/g' `find | grep "Makefile$"` 
-
-sed -i 's/XX = g++/XX = g++ -DMULTI_STREAM/g' Makefile 
-
-4. 等待程序执行完再继续
-
-while(`pgrep -f prepare1 | wc -l`)
-do
+    while(`pgrep -f prepare1 | wc -l`)
+    do
         sleep 1
-done
+    done
 
-# 等待prepare1执行完后再继续后面的代码
+等待prepare1执行完后再继续后面的代码
 
-6. echo不换行
+## 4.6. echo不换行
 
-echo -e "please input a value:\c"
-
-7.循环
-
-for i in `seq 10000` #seq 产生1~10000
-do
-
-done
+    echo -e "please input a value:\c"

@@ -1,15 +1,3 @@
-# 文件操作
-
-在Linux中，一切皆文件。在大多数情况下，都能用5个基本函数：
-
-- open
-- close
-- read
-- write
-- ioctl
-
-# 1. Linux文件结构
-
 ## 1.1 目录
 
 一种特殊的文件
@@ -50,64 +38,6 @@
 - 1: 标准输出
 - 2: 标准错误
 
-## 4.1 write系统调用
-
-    #include <unistd.h>
-    
-    size_t write(int fildes, const void *buf, size_t nbytes);
-    
-## 4.2 read系统调用
-
-    #include <unistd.h>
-    
-    size_t read(int fildes, void *buf, size_t nbytes);
-    
-## 4.3 open系统调用
-
-创建一个新的文件描述符
-
-    #include <fcntl.h>
-    #include <sys/types.h>
-    #include <sys/stat.h>
-    
-    int open(const char *path, int oflags);
-    int open(const char *path, int oflags, mode_t mode);
-    
-- O_RDONLY  以只读方式打开
-- O_WRONLY  以只写方式打开
-- O_RDWR    以读写方式打开
-
-可选模式组合：
-
-- O_APPEND  把写入数据追加在文件的末尾
-- O_TRUNC   把文件长度设置为零，丢弃已有内容
-- O_CREAT   如果需要，就按照参数mode中给出的访问模式创建文件
-- O_EXCL    与O_CREAT一起使用，确保调用者创建出文件。
-
-### 访问权限的初始值
-
-## 4.4 close系统调用
-
-    #include <unistd.h>
-    
-    int close(int fildes);
-    
-## 4.5 ioctl系统调用
-
-    #include <unistd.h>
-    
-    int ioctl(int fildes, int cmd, ...);
-    
-## 4.6 其他文件管理相关的系统调用
-
-### 4.6.1 lseek系统调用
-
-对文件描述符fildes的读写指针进行设置。也就是当前读写位置
-
-    #include <unistd.h>
-    #include <sys/types.h>
-    
-    off_t lseek(int fildes, off_t offset, int whence);
     
 ### 4.6.2 fstat,stat和lstat系统调用
 
@@ -122,40 +52,7 @@
     int lstat(const char *path, struct stat *buf);
     
 ### 4.6.3 dup和dup2系统调用
-
-dup提供了一种复制文件描述符的方法，使我们能供通过两个或更多不同的文件描述符来访问同一个文件。
-
-    #include <unistd.h>
     
-    int dup(int fildes);
-    int dup2(int fildes, int fildes2);
-    
-# 5 标准I/O库
-
-## 5.1 fopen
-
-## 5.2 fread
-
-## 5.3 fwrite
-
-## 5.4 fclose
-
-## 5.5 fflush
-
-## 5.6 fseek
-
-## 5.7 fgetc/getc/getchar
-
-## 5.8 fputc/putc/putchar
-
-## 5.9 fgets/gets
-
-# 6 格式化输入输出
-
-## 6.1 printf/fprintf/sprintf
-
-## 6.2 scanf/fscanf/sscanf
-
 ## 6.3 其他流函数
 
 - fgetpos
@@ -193,27 +90,6 @@ dup提供了一种复制文件描述符的方法，使我们能供通过两个�
     
 # 7. 文件和目录的维护
 
-## 7.1 chmod
-
-## 7.2 chown
-
-## 7.3 unlink/link/symlink
-
-## 7.4 mkdir/rmdir
-
-## 7.5 chdir/getcwd
-
-# 8. 扫描目录
-
-## 8.1 opendir
-
-## 8.2 readdir
-
-## 8.3 telldir
-
-## 8.4 seekdir
-
-## 8.5 closedir
 
 # 9. 错误处理
 
@@ -272,33 +148,7 @@ CPU的详细信息
 
 ## 11.1 fcntl系统调用
 
-对底层文件描述符提供了更多的操作方法。
 
-    #include <fcntl.h>
-    
-    int fcntl(int fildes, int cmd);
-    int fcntl(int fildes, int cmd, long arg);
-    
-对打开的文件描述符进程各种操作:
-
-- 复制
-- 获取和设置文件描述符标志
-- 获取和设置文件状态标志
-- 管理建议性文件锁
-
-常用方法：
-
-- fcntl(fildes, F_DUPFD, newfd)
-返回一个新的文件描述符，其数值大于等于整数newfd。新文件描述符是fildes的一个副本。
-
-- fcntl(fildes, F_GETFD)
-返回文件描述符标志
-
-- fcntl(fildes, F_SETFD, flags)
-设置文件描述符标志
-
-- fcntl(fildes, F_GETFL) | fcntl(fildes, F_SETFL, flags)
-获取和设置文件状态标志和访问模式。
 
 ## 11.2 mmap函数
 
@@ -363,7 +213,3 @@ flags参数控制修改方式：
 ### Demo 
 
 通过mmap存取一个结构化数据文件。
-
-
-
-
