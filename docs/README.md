@@ -7,9 +7,11 @@
 
 |文件和目录|第3章|[文件I/O](https://github.com/breakerthb/LinuxPrograming/blob/master/03-FileIO.md)||
 ||第4章|[文件和目录](https://github.com/breakerthb/LinuxPrograming/blob/master/04-File&Dir.md)||
-||第5章|[标准I/O库](https://github.com/breakerthb/LinuxPrograming/blob/master/05-IO.md)||
-|输入和输出||||
-|程序和进程||||
+|输入和输出|第5章|[标准I/O库](https://github.com/breakerthb/LinuxPrograming/blob/master/05-StarndardIO.md)||
+||第6章|[系统数据文件和信息](https://github.com/breakerthb/LinuxPrograming/blob/master/06-SysDataFile.md)||
+|程序和进程|第7章|[进程环境](https://github.com/breakerthb/LinuxPrograming/blob/master/07-ProcessEnv.md)||
+||第8章|[进程控制](https://github.com/breakerthb/LinuxPrograming/blob/master/08-ProcessCtrl.md)||
+||第9章|[进程关系](https://github.com/breakerthb/LinuxPrograming/blob/master/09-ProcessRelation.md)||
 |出错处理||||
 |用户标识||||
 |时间值||||
