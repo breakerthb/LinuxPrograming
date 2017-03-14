@@ -5,18 +5,16 @@
 |UNIX知识体系|第1章|[UNIX基础知识]()||
 |[Shell](https://github.com/breakerthb/LinuxPrograming/blob/master/02-Shell.md)|||Shell程序设计| 
 
-|文件和目录|第3章|[文件I/O](https://github.com/breakerthb/LinuxPrograming/blob/master/03-FileIO.md)|||
-||第4章|[文件和目录](https://github.com/breakerthb/LinuxPrograming/blob/master/04-File&Dir.md)|||
-||第5章|[标准I/O库](https://github.com/breakerthb/LinuxPrograming/blob/master/05-IO.md)|||
-|输入和输出|||||
-|程序和进程|||||
-|出错处理|||||
-|用户标识|||||
-|时间值|||||
-|系统调用和库函数|||||
+|文件和目录|第3章|[文件I/O](https://github.com/breakerthb/LinuxPrograming/blob/master/03-FileIO.md)||
+||第4章|[文件和目录](https://github.com/breakerthb/LinuxPrograming/blob/master/04-File&Dir.md)||
+||第5章|[标准I/O库](https://github.com/breakerthb/LinuxPrograming/blob/master/05-IO.md)||
+|输入和输出||||
+|程序和进程||||
+|出错处理||||
+|用户标识||||
+|时间值||||
+|系统调用和库函数||||
 
-|||第4章|文件和目录|
-|||第5章|标准I/O库|
 |||Linux环境||  
 |||终端||  
 |||curses||  
