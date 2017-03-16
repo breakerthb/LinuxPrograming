@@ -1,5 +1,7 @@
 # C/C++获取时间方法
 
+### Ref : P151
+
 # 概念
 
 UTC时间 - 格林尼治时间
@@ -12,11 +14,22 @@ UTC时间 - 格林尼治时间
 
 函数获取当前时间距1970年1月1日的秒数，以秒计数单位，存于rawtime 中。
 
-    #include "time.h"
+    #include <time.h>
     time_t time(time_t *rawtime);
     
+### 返回值
+
+- 成功：返回时间值
+- 失败：返回-1
+
 如果rawtime是空指针，直接返回当前时间。如果t不是空指针，返回当前时间的同时，将返回值赋予t指向的内存空间。
+
+时钟类型标识符：
+
+![6-8](https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/PIC/6-8.png)
     
+### Demo
+
     #include "time.h"
     
     void main ()
@@ -33,6 +46,15 @@ UTC时间 - 格林尼治时间
         exit(0);
     }
 
+clock_gettime()函数可用于获取指定时钟的时间。
+
+    #include <sys/time.h>
+    int clock_gettime(clockid_t clock_id, struct timespec *tsp);
+    
+### 返回值
+
+- 成功：返回0
+- 失败：返回 −1
 
 # 2. gmtime() | localtime()
 	
@@ -50,7 +72,7 @@ UTC时间 - 格林尼治时间
 gmtime()将参数timep所指的time_t结构中的信息转换成真实世界所使用的时间日期表示方法，然后将结果由结构tm返回。
 
 ## 结构tm 的定义为 
-	
+
     struct tm{
         int tm_sec;  //代表目前秒数, 正常范围为0-59, 但允许至61 秒
         int tm_min;  //代表目前分数, 范围0-59
@@ -65,7 +87,7 @@ gmtime()将参数timep所指的time_t结构中的信息转换成真实世界所�
 	
 ## Demo 
 	
-### gmtime
+### gmtime()
 
     #include <stdio.h>
     #include <time.h>
@@ -91,8 +113,8 @@ gmtime()将参数timep所指的time_t结构中的信息转换成真实世界所�
 	2016-12-29
     Thu - 16:31:57
 
-### localtime
-	
+### localtime()
+
     #include <stdio.h>
     #include <time.h>
     #include <string>
@@ -117,7 +139,7 @@ gmtime()将参数timep所指的time_t结构中的信息转换成真实世界所�
 	2016-12-29
     Thu - 8:35:37
 	
-# 3. ctime
+# 3. ctime()
 
 ## 头文件	
 
@@ -141,7 +163,7 @@ gmtime()将参数timep所指的time_t结构中的信息转换成真实世界所�
 
     #include <stdio.h>
     #include <time.h>
-    
+
     int main()
     {
         time_t timep;
@@ -179,17 +201,17 @@ asctime()将参数timeptr所指的tm结构中的信息转换成真实世界所�
 返回一字符串表示目前当地的时间日期。
 
 ## 范例
-	
+
     #include <stdio.h>
     #include <time.h>
-    
+
     int main()
     {
         time_t timep;
         time (&timep);
-    
+
         struct tm *p = gmtime(&timep);
-    
+
         printf("%s", asctime(p));
     }
 	
@@ -206,7 +228,7 @@ asctime()将参数timeptr所指的tm结构中的信息转换成真实世界所�
 	
 ## 定义函数	
 
-	int settimeofday(const struct timeval *tv, const struct timezone *tz);
+    int settimeofday(const struct timeval *tv, const struct timezone *tz);
 	
 ## 函数说明	
 
@@ -225,17 +247,17 @@ settimeofday()会把目前时间设成由tv 所指的结构信息，当地时区
     EPERM  并非由root 权限调用settimeofday()，权限不够。
     EINVAL  时区或某个数据是不正确的，无法正确设置时间。
 	
-# 6. gettimeofday
+# 6. gettimeofday()
 
 （取得目前的时间）
 
 ## 表头文件	
 
-	#include <sys/time.h>
-	#include <unistd.h>
+    #include <sys/time.h>
+    #include <unistd.h>
 	
 ## 定义函数	
-	
+
     int gettimeofday (struct timeval * tv , struct timezone * tz)
 	
 ## 函数说明	
@@ -275,7 +297,7 @@ timezone 结构定义为:
 成功则返回0，失败返回－1，错误代码存于errno。附加说明EFAULT指针tv和tz所指的内存空间超出存取权限。
 
 ## 范例
-	
+
     #include <sys/time.h>
     #include <unistd.h>
     #include <stdio.h>
@@ -302,13 +324,13 @@ timezone 结构定义为:
     tz_minuteswest: 0
     tz_dsttime: 0
 
-# 7. mktime
+# 7. mktime()
 
 （将时间结构数据转换成经过的秒数）
 
 ## 表头文件
-	
-	#include<time.h>
+
+    #include <time.h>
 	
 ## 定义函数	
 
@@ -324,8 +346,7 @@ mktime()用来将参数timeptr所指的tm结构数据转换成从公元1970年1�
 
 ## 范例
 	
-    /* 用time()取得时间（秒数），利用localtime()
-    	转换成struct tm 再利用mktine（）将struct tm转换成原来的秒数*/
+    /* 用time()取得时间（秒数），利用localtime() 转换成struct tm 再利用mktine() 将struct tm转换成原来的秒数*/
     #include <time.h>
     #include <stdio.h>
     int main()
@@ -350,8 +371,35 @@ mktime()用来将参数timeptr所指的tm结构数据转换成从公元1970年1�
 
 源文档 <http://www.cppblog.com/deane/articles/118718.html> 
 
+# 8. strftime() strptime()
 
-# 8. 获取函数执行时间
+## 8.1 产生时间字符串
+
+    #include <time.h>
+    size_t strftime(char *restrict buf, size_t maxsize, 
+                    const char *restrict format, const struct tm *restrict tmptr);
+    size_t strftime_l(char *restrict buf, size_t maxsize, 
+                    const char *restrict format, const struct tm *restrict tmptr, locale_t locale);
+
+### 返回值
+
+- 成功：存入数组的字符数
+- 失败：返回0
+
+### Demo
+
+获取时间字符串
+
+<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/SRC_AP/datafiles/strftime.c>
+
+## 8.2 字符串时间转换成分解时间
+
+    #include <time.h>
+    char *strptime(const char *restrict buf, const char *restrict format,
+                    struct tm *restrict tmptr);
+
+
+# 9. 获取函数执行时间
 
     // 微妙级
     #include <unistd.h>
