@@ -1,6 +1,75 @@
-# Linux环境
+# 进程环境
 
-# 1. 程序参数
+# 1. 内容
+
+# 2. main函数
+
+原型：
+
+    int main(int argc, char *argv[]);
+    
+# 3. 进程终止
+
+8种方法
+
+正常终止：
+
+- 从main返回
+- 调用exit
+- 调用_exit或_Exit
+- 最后一个线程从其启动例程返回（ref:11.5）
+- 从最后一个线程调用pthread_exit(ref:11.5)
+
+异常终止：
+
+- 调用abort
+- 接到一个信号
+- 最后一个线程对取消请求做出响应
+
+## 3.1 退出函数
+
+    #include <stdlib.h>
+    void exit(int status);
+    void _Exit(int status);
+    
+这两个函数立即进入内核。
+
+    #include <unistd.h>
+    void _exit(int status);
+
+这个函数先执行一些清理工作，之后进入内核。
+
+status为返回值。
+
+    exit(0);
+    
+等价于：
+
+    return(0);
+    
+## 3.2 atexit()
+
+一个进程可以登记多至32个函数，这些函数将由exit自动调用。登记方法：
+
+    #include <stdlib.h>
+    int atexit(void (*func)(void));
+    
+返回值：
+
+- 成功：0
+- 失败：非0
+
+exit调用这些函数的顺序和atexit注册的顺序相反。同一个函数如果注册多次则被调用多次。
+
+![7-2](https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/PIC/7-2.png)
+
+C程序的启动和终止。
+
+### Demo 
+
+<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP/environ/doatexit.c>
+
+# 4. 命令行参数
 
 一个简单的参数处理函数，Demo:args.c
 
@@ -21,7 +90,7 @@
         exit(0);
     }
     
-## 1.1 getopt
+## 4.1 getopt
 
 支持需要关联值和不需要关联值的选项。
 
@@ -33,86 +102,71 @@
     
 ### Demo : argopt.c
 
-## 1.2 getopt_log
+## 4.2 getopt_log
 
 它接受以双划线（--）开始的长参数
 
 ### Demo : 
 
-# 2. 环境变量
+# 5. 环境表
+
+每个程序都接收到一张环境表。
+
+    extern char **environ;
+    
+每个指针以'\0'结尾，
+
+![7-5](https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/PIC/7-5.png)
+
+常用getenv和putenv来管理，如果要整个环境变量表，需要访问environ指针。
+
+### Demo
+
+<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_LP/04_LinuxEnv/showenv.c>
+
+# 6. C程序的存储空间布局
+
+# 7. 共享库
+
+# 8. 存储空间分配
+
+    #include <stdlib.h>
+    void *malloc(size_t size);
+    void *calloc(size_t nobj, size_t size);
+    void *realloc(void *ptr, size_t newsize);
+    // All three return: non-null pointer if OK, NULL on error
+    void free(void *ptr);
+
+# 9. 环境变量
 
     #include <stdlib.h>
     
     char *getenv(const char *name);
     int putenv(cont char *string);
+    int setenv(const char *name, const char *value, int rewrite);
+    int unsetenv(const char *name);
     
 获取和修改环境变量。
 
-### Demo : environ.c
+### Demo
 
-## 2.1 环境变量的用途
+<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_LP/04_LinuxEnv/environ.c>
 
-## 2.2 environ变量
+# 10. setjmp() longjmp()
 
-程序的环境由一组格式为“名字=值”的字符串组成，程序可以通过environ变量直接访问。
+    #include <setjmp.h>
+    int setjmp(jmp_buf env);
+    // Returns: 0 if called directly, non
+    void longjmp(jmp_buf env, int val);
 
-    #include <stdlib.h>
-    
-    extern char **environ;
-    
-### Demo : showenv.c
+### Ref : P170
 
-# 3. 时间和日期
+# 11. getrlimit() setrlimit()
 
-# 4. 临时文件
+    #include <sys/resource.h>
+    int getrlimit(int resource, struct rlimit *rlptr);
+    int setrlimit(int resource, const struct rlimit *rlptr);
+    // Both return: 0 if OK, −1 on erro
 
-    #include <stdio.h>
-    
-    char *tmpnam(char* s);
-    
-返回一个不与任何文件同名的有效文件名
-
-    #include <stdio.h>
-    
-    FILE *tmpfile(void);
-    
-给文件命名的同时打开它。
-
-### Demo：tmpam.c
-
-# 5. 用户信息
-
-    #include <sys/types.h>
-    #include <unistd.h>
-    
-    uid_t getuid(void); // 返回UID
-    char *getlogin(void); // 返回登录名
-    
-更有效的用户信息接口
-
-    #include <sys/types.h>
-    #include <pwd.h>
-    
-    struct passwd *getpwuid(uid_t uid);
-    struct passwd *getpwnam(const char *name);
-    
-# 6. 主机信息
-
-- gethostname
-- uname
-- gethostid
-
-# 7. 日志
-
-    #include <syslog.h>
-    
-    void syslog(int priority, const char *message, arguments ...);
-    
-# 8. 资源和限制
-
-# 9. 时间和日期
-
-Ref : <https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/Time.md>
-    
 
     
