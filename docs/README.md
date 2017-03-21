@@ -1,4 +1,4 @@
-# 《Linux程序设计》目录
+# Linux程序设计
 
 |分类|UNIX环境高级编程|||
 |:--:|:--:|:--:|:--:|
@@ -32,6 +32,12 @@
 |||用GTK+进行GNOME编程||  
 |||用Qt进行KDE编程||  
 |||Linux标准||  
+
+# C/C++ 标准库
+
+## 字符串操作
+
+[strtok()|strtok_s()](https://github.com/breakerthb/LinuxPrograming/blob/master/CStandard/strtok.md) - 字符串分割
 
 # 《Linux/Unix系统编程手册》
 
