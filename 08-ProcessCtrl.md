@@ -1,8 +1,40 @@
+# 进程控制
 
+# 1. 概述
 
+# 2. 进程标识
 
+进程ID，唯一的非负数。
 
+- ID : 0
 
+调度进程 / 交换进程（swapper） / 系统进程
+
+- ID : 1
+
+init进程，负责在自举内核后启动一个UNIX系统。
+
+- ID : 2
+
+页守护进程。支持虚拟存储器系统的分页操作。
+
+相关的函数操作。
+
+    #include <unistd.h>
+    pid_t getpid(void);     // 返回进程ID
+    pid_t getppid(void);    // 父进程ID
+    uid_t getuid(void);     // 实际用户ID
+    uid_t geteuid(void);    // 有效用户ID
+    gid_t getgid(void);     // 实际组ID
+    gid_t getegid(void);    // 有效组ID
+
+*注意：* 这些函数都没有错误返回。
+
+# 3. fork() vfork()
+
+[fork与vfork介绍](https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/fork.md)
+
+# 4. exit()
 
 
 
