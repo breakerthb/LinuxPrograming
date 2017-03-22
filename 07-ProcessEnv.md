@@ -10,64 +10,7 @@
     
 # 3. 进程终止
 
-8种方法
-
-正常终止：
-
-- 从main返回
-- 调用exit
-- 调用_exit或_Exit
-- 最后一个线程从其启动例程返回（ref:11.5）
-- 从最后一个线程调用pthread_exit(ref:11.5)
-
-异常终止：
-
-- 调用abort
-- 接到一个信号
-- 最后一个线程对取消请求做出响应
-
-## 3.1 退出函数
-
-    #include <stdlib.h>
-    void exit(int status);
-    void _Exit(int status);
-    
-这两个函数立即进入内核。
-
-    #include <unistd.h>
-    void _exit(int status);
-
-这个函数先执行一些清理工作，之后进入内核。
-
-status为返回值。
-
-    exit(0);
-    
-等价于：
-
-    return(0);
-    
-## 3.2 atexit()
-
-一个进程可以登记多至32个函数，这些函数将由exit自动调用。登记方法：
-
-    #include <stdlib.h>
-    int atexit(void (*func)(void));
-    
-返回值：
-
-- 成功：0
-- 失败：非0
-
-exit调用这些函数的顺序和atexit注册的顺序相反。同一个函数如果注册多次则被调用多次。
-
-![7-2](https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/PIC/7-2.png)
-
-C程序的启动和终止。
-
-### Demo 
-
-<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP/environ/doatexit.c>
+[进程终止的种类](https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/exit.md)
 
 # 4. 命令行参数
 

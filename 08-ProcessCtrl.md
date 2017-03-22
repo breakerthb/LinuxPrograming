@@ -36,7 +36,27 @@ init进程，负责在自举内核后启动一个UNIX系统。
 
 # 4. exit()
 
+[进程终止的种类](https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/exit.md)
 
+## init收养
+
+父进程在子进程之前终止，子进程的父进程会变为init(PID:1)，保证每个活着的进程都有父进程。
+
+## 回收
+
+子进程先结束，父进程可以通过wait()和waitpid()回收子进程资源。
+
+## 僵尸进程
+
+一个已经终止的子进程，如果父进程没有对其进行资源回收，这个子进程就成为僵尸进程。ps命令时，僵尸进程的状态是Z
+
+init收养的进程不会成为僵尸进程，因为init会自动调用wait()进行回收。
+
+# 5. wait() waitpid() waitid()
+
+[回收子进程](https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/wait.md)
+
+# 6. 竞争条件
 
 
 

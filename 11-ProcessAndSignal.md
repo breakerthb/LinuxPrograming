@@ -98,95 +98,9 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
 
     execl("./abc", "abc", "param_1", "param_2", NULL);
 
-## 3.3 fork函数
 
-创建一个新进程，这个进程的配置完全复制父进程,它和父进程是同一份代码。fork与exec需要结合使用。
 
-    #include <sys/types.h>
-    #include <unistd.h>
-    
-    pid_t fork(void);
-    
-执行成功，返回新进程的PID；如果失败，返回-1。
 
-    pid_t new_pid = fork();
-    
-    switch(new_pid)
-    {
-    case -1: // Error
-        break;
-    case 0: // child
-        // 这里的new_pid是0
-        break;
-    default: // parent
-        // 这里的new_pid是子进程的pid
-        break;
-    }
-
-### Demo
-
-<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_fork1.c>
-
-由于主进程提前结束，因此输出较乱。
-
-## 3.4 wait函数
-
-主进程可以通过wait等待子进程结束。
-
-    #include <sys/types.h>
-    #include <syst/wait.h>
-    
-    pid_t wait(int* stat_loc);
-    
-返回子进PID。
-
-如果stat_loc不是空指针，状态信息将会写在它指向的位置。解释状态信息宏：
-
-|||
-|:-:|:-:|
-|WIFEXITED(stat_val)|如果子进程正常结束，它就取一个非零值|
-|WEXITSTATUS(stat_val)|如果WIFEXITED非零，它返回子进程的退出码|
-|WIFSIGNALED(stat_val)|如果子进程因为一个未捕获的信号而终止|
-|WTERMSIG(stat_val)|如果WIFSIGNALED非零，它返回一个信号代码|
-|WIFSTOPPED(stat_val)|如果子进程意外终止，它就取一个非零值|
-|WSTOPSIG(stat_val)|如果WIFSTOPPED非零，它返回一个信号代码|
-
-### Demo
-
-<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_wait.c>
-
-### 子进程销毁条件
-
-- 父进程正常结束
-- 父进程通过wait得到子进程结束状态
-
-否则会产生僵尸进程。
-
-## 3.5 waitpid函数
-
-等待某个特定进程。
-
-    #include <sys/types.h>
-    #include <sys/wait.h>
-    
-    pid_t waitpid(pid_t pid, int *stat_loc, int options);
-    
-- pid
-
-进程PID,如果为-1，返回任一子进程信息
-
-- stat_loc
-
-如果不为空，得到返回信息状态
-
-- options
-
-用来改变waitpid的行为。最有用的是WNOHANG，防止waitpid调用将调用者的执行挂起。
-如果需要周期性的检查，则用下面语句：
-
-    waitpid(child_pid, (int*)0, WNOHANG);
-
-这样不会挂起，如果子进程没有结束或意外终止，返回0，否则返回child_pid。如果失败，返回-1.
 
 ## 3.6 输入输出重定向
 

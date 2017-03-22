@@ -63,6 +63,15 @@
 
 [源码](http://www.man7.org/tlpi/code/online/all_files_by_chapter.html)
 
+## Path
+
+文章：<https://github.com/breakerthb/LinuxPrograming/blob/master>  
+Note：<https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook>  
+Pic: <https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/PIC>  
+ 
+Linux Programing源码：<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_LP>  
+Advanced Programing in the UNIX Environment源码：<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP>  
+
 
 
 
