@@ -58,8 +58,70 @@ init收养的进程不会成为僵尸进程，因为init会自动调用wait()进
 
 # 6. 竞争条件
 
+- 如果父进程需要等待子进程终止，需要调用wait()
+- 如果子进程需要等待父进程终止，可以使用下列形式：
 
 
+    while (getppid() != 1)
+        sleep(1);
+
+这样的轮询方法对CPU消耗过大，应该采用进程间通讯的方式：
+
+    #include "apue.h"
+    TELL_WAIT(); /* set things up for TELL_xxx & WAIT_xxx */
+    if ((pid = fork()) < 0) 
+    {
+        err_sys("fork error");
+    } 
+    else if (pid == 0) /* child */ 
+    {
+        // Do something
+        TELL_PARENT(getppid()); // tell parent we’re done 
+        WAIT_PARENT(); // wait for parent
+        
+        // Do another something
+        
+        exit(0);
+    }
+
+    // Parent do something
+    TELL_CHILD(pid); // tell child we’re done
+    WAIT_CHILD(); // and wait for child
+
+    // Parent do another something
+
+    exit(0);
+    
+相关宏定义：
+    
+    void	TELL_WAIT(void);
+    void	TELL_PARENT(pid_t);
+    void	TELL_CHILD(pid_t);
+    void	WAIT_PARENT(void);
+    void	WAIT_CHILD(void);
+    
+函数内容：<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP/lib/tellwait.c>
+
+
+### Demo
+
+父进程和子进程各输出一个字符串。由于输出依赖于内核，因此存在一个竞争条件。
+
+没有进程间通信：
+
+<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP/proc/tellwait1.c>
+
+输出冲突产生乱码。
+
+有进程间通信：
+
+<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP/proc/tellwait2.c>
+
+不产生冲突。
+
+# 7. exec()
+
+[exec函数](https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/exec.md)
 
 ## 6.4 文件流错误
 

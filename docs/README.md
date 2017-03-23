@@ -43,6 +43,8 @@
 # Linux 库
 
 [fork()与vfork()](https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/fork.md)
+[wait() waitpid()](https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/wait.md)
+[exec()](https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/exec.md)
 
 [select()](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/select.md)  
 [poll()](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/poll.md)  
