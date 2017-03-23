@@ -11,139 +11,16 @@ ref : [任务管理](https://www.zybuluo.com/breakerthb/note/429591)
 
 # 3. 启动新进程
 
-## 3.1 system函数
-
-    # include <stdlib.h>
-    
-    int system(const char* string);
-    
-函数作用：运行传递给它的命令，命令执行情况类似于：
-
-    $ sh -c "command"
-    
-### 返回值
-
-- 无法启动shell，返回127
-- 其他错误，返回-1
-- 执行成功，返回命令退出码
-
-### Demo
-
-<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_system.c>
-
-### PS
-
-不建议使用system函数启动其他进程，因为它需要先启动一个新的shell，这对shell安装情况和环境的依赖很大。
-
-函数的执行效率不高。
-
-## 3.2 exec 函数
-
-替换进程映像。把当前进程替换为一个新进程，新进程由path和file参数指定。可以通过exec从一个程序切换到另一个程序。
-
-    #include <unistd.h>
-    extern char **environ;
-    
-    int execl(const char *path, const char *arg, ...);
-    int execlp(const char *file, const char *arg, ...);
-    int execle(const char *path, const char *arg, ..., char * const envp[]);
-    
-    int execv(const char *path, char *const argv[]);
-    int execvp(const char *file, char *const argv[]);
-    int execve(const char *path, char *const argv[], char *const envp[]);
-    
-exec是一组函数，分为两大类：
-
-前三个参数可变，后三个参数固定。
-
-以字母p结尾的函数通过搜索PATH环境变量来查找新程序中可执行程序的位置。
-
-全局变量environ可以把一个值传递传递到新程序的环境变量中。
-
-### 返回值
-
-一般情况，exec不会返回，除非出现错误。出错时，exec返回-1，并且设置错误变量errno。
-
-### Demo
-
-常见的六种方式：
-
-    #include <unistd.h>
-    
-    char* const ps_argv[] = {"ps", "ax", NULL};
-    
-    char* const ps_envp[] = {"PATH=/bin:/usr/bin", "TERM=console", NULL};
-    
-    execl("/bin/ps", "ps", "ax", NULL);
-    execlp("ps", "ps", "ax", NULL);
-    execle("/bin/ps", "ps", "ax", NULL, ps_envp);
-    
-    execv("/bin/ps", ps_argv);
-    execvp("ps", ps_argv);
-    execve("/bin/ps", ps_argv, ps_envp);
-    
-ref:
-
-<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_execlp.c>
-
-### 注意：
-
-- 新进程替换旧进程
-
-exec产生了一个新的程序，因此执行后只能看到新程序的输出，看不到之前程序中exec代码后面的执行情况。
-
-- 前两个参数
-
-前两个参数都是被调用的程序名称，不同的是第一个参数要表明路径，第二个参数只是程序名。
-
-    execl("./abc", "abc", "param_1", "param_2", NULL);
 
 
 
 
 
-## 3.6 输入输出重定向
 
-通过exec调用实现一个过滤程序。
 
-- demo_upper.c
 
-实现一个把小写字母转换成大写字母的过滤程序
 
-<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_upper.c>
 
-执行：
-
-    $ ./run_upper
-    hello ABC
-    HELLO ABC
-    ^C
-
-或
-
-    $ ./run_upper < file.txt
-
-通过另一个程序调用。
-
-- demo_useupper.c
-
-通过exec来调用run_upper程序实现参数过滤。
-
-<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_useupper.c>
-
-执行：
-
-    $ ./run_useupper file.txt
-    
-- demo_multi_useupper.c
-
-通过子进程来同时完成多个exec调用。
-
-<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_multi_useupper.c>
-
-执行：
-
-    $ ./run_multi_useupper file.txt file.txt
 
 # 4. 信号
 
@@ -249,3 +126,209 @@ exec产生了一个新的程序，因此执行后只能看到新程序的输出�
     int sigemptyset(sigset_t* set);
     int sigfillset(sigset_t* set);
     int sigdelset(sigset_t* set, int signo);
+    
+    
+## 6.4 文件流错误
+
+为了表明错误，许多stdio库函数会返回一个超出范围的值，比如空指针或EOF常数。此时，错误由外部变量errno指出：
+
+    #include <erro.h>
+    
+    extern int errno;
+    
+这个值只有在函数失败时才有意义。
+
+也可以通过检查文件流状态判断是否出错。
+
+    #include <stdio.h>
+    
+    int ferror(FILE *stream);
+    int feof(FILE *stream);
+    void clearerr(FILE *stream);
+
+## 6.5 文件流和文件描述符
+
+    #include <stdio.h>
+    
+    int fileno(FILE *stream);
+    FILE *fdopen(int fd, const char *mode);
+    
+# 7. 文件和目录的维护
+
+
+# 9. 错误处理
+
+## 9.1 strerror函数
+
+把错误代码映射成一个字符串
+
+    #incluce <string.h>
+    
+    char *strerror(int errnum);
+    
+## 9.2 perror函数
+
+把错误代码映射成一个字符串，并输出到标输出。
+
+    #include <stdio.h>
+    
+    void perror(const char *s);
+    
+# 10 /proc文件系统
+
+这个目录中有很多特殊的文件用来对驱动程序和内核信息进行访问。
+
+## 10.1 /proc/cpuinfo
+
+CPU的详细信息
+
+    $ cat /proc/cpuinfo
+    
+## 10.2 /proc/meminfo
+
+内存使用情况
+
+    $ cat /proc/meminfo
+    
+## 10.3 /proc/version
+
+内核版本信息
+
+    $ cat /proc/version
+    
+## 10.4 /proc/net/sockstat
+
+网络套接字使用统计
+
+    $ cat /proc/net/sockstat
+    
+## 10.5 /proc/sys/fs/file-max
+
+同时打开文件总数
+
+    $ cat /proc/sys/fs/file-max
+    $ echo 80000 > /proc/sys/fs/file-max
+
+# 11. 高级主题：fcntl和mmap
+
+## 11.1 fcntl系统调用
+
+
+
+## 11.2 mmap函数
+
+内存映射函数，建立一段可以被多个程序读写的内存。
+
+可以通过管理内存的方式读写文件。
+
+    #include <sys/mman.h>
+    
+    void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t off);
+    
+- addr
+
+请求某个特定的内存地址。推荐使用0，系统会自动分配地址。这样执行效率最高。
+
+- off
+
+共享内存段访问文件的起始位置。
+
+- fd
+打开文件标识符。
+
+- prot
+设置内存访问权限
+
+
+    PROT_READ   允许读该内存段
+    PROT_WRITE  允许写该内存段
+    PROT_EXEC   允许执行该内存段
+    PROT_NONE   该内存段不能被访问
+    
+- flags
+控制程序对该内存段的改变所造成的影响
+
+
+    MAP_PRIVATE 内存段私有，对它的修改只对本进程有效
+    MAP_SHARED  把对该内存的修改保存到磁盘文件中
+    MAP_FIXED   该内存段必须位于addr指定的地址处
+    
+### msync函数
+
+把对内存段的修改写回到映射文件中
+
+    #include <sys/mman.h>
+    
+    int msync(void *addr, size_t len, int flags);
+    
+flags参数控制修改方式：
+
+    MS_ASYNC        采用异步写方式
+    MS_SYNC         采用同步写方式
+    MS_INVALLDATE   从文件中读回数据
+    
+### munmap函数
+
+释放内存段
+
+    #include <sys/mman.h>
+    
+    int munmap(void *addr, size_t len);
+    
+### Demo 
+
+通过mmap存取一个结构化数据文件。
+
+
+
+
+
+# 4. 临时文件
+
+    #include <stdio.h>
+    
+    char *tmpnam(char* s);
+    
+返回一个不与任何文件同名的有效文件名
+
+    #include <stdio.h>
+    
+    FILE *tmpfile(void);
+    
+给文件命名的同时打开它。
+
+### Demo：tmpam.c
+
+# 5. 用户信息
+
+    #include <sys/types.h>
+    #include <unistd.h>
+    
+    uid_t getuid(void); // 返回UID
+    char *getlogin(void); // 返回登录名
+    
+更有效的用户信息接口
+
+    #include <sys/types.h>
+    #include <pwd.h>
+    
+    struct passwd *getpwuid(uid_t uid);
+    struct passwd *getpwnam(const char *name);
+    
+# 6. 主机信息
+
+- gethostname
+- uname
+- gethostid
+
+# 7. 日志
+
+    #include <syslog.h>
+    
+    void syslog(int priority, const char *message, arguments ...);
+    
+# 8. 资源和限制
+
+# 9. 时间和日期
+
+Ref : <https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/Time.md>
