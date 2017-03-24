@@ -298,31 +298,7 @@ type指定IO流的读写方式：
 
 # 12. 临时文件
 
-    #include <stdio.h>
-    char *tmpnam(char *ptr);
-    FILE *tmpfile(void);
-    
-- tmpnam
-
-产生一个与现有文件名不同的一个有效路径名字符串。每次调用都产生一个不同的路径名。最多调用次数是TMP_MAX。
-
-- tmpfile
-
-创建一个临时二进制文件。在关闭文件或程序结束时将自动删除这个文件。
-
-### Demo
-
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/SRC_AP/stdio/tempfiles.c>
-
-另外两个函数：
-
-    #include <stdlib.h>
-    char *mkdtemp(char *template);  // 创建一个目录，名字唯一
-    int mkstemp(char *template);    // 创建一个文件，名字唯一
-    
-### Demo
-
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/SRC_AP/stdio/mkstemp.c>
+[临时文件](https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/TempFile.md)
     
 # 13. 内存流
 

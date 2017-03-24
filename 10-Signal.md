@@ -1,34 +1,12 @@
+# 信号
 
-# 1. 进程介绍
-
-进程是一个地址空间，这个地址空间中运行着一个或多个线程和这些线程所需要的资源。
-
-在Linux编程中，多进程的实现比多线程更容易。
-
-# 2. 进程查看
-
-ref : [任务管理](https://www.zybuluo.com/breakerthb/note/429591)
-
-# 3. 启动新进程
-
-
-
-
-
-
-
-
-
-
-
-
-# 4. 信号
-
-## 4.1 介绍
+# 1. 概念
 
 信号是进程间传递信息的重要方式。
 
-信号名称在signal.h中定义：
+每个信号都有一个名字，以SIG开头。
+
+信号名称在<signal.h>中定义:
 
 ||||
 |:-:|:-:|:-:|
@@ -53,22 +31,77 @@ ref : [任务管理](https://www.zybuluo.com/breakerthb/note/429591)
 |19|SIGPWR|电源故障| 
 |20|SIGSTP|Ctrl + z|
 
-## 4.2 signal函数
+某个信号出现时，可以让内核完成下面的动作：
+
+- 忽略信号
+
+除了SIGKILL和SIGSTOP都可以被忽略。
+
+- 捕捉信号
+
+- 执行默认动作
+
+大多数信号的默认动作是终止进程。如图所示：
+
+![10-1](https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/PIC/10-1.png)
+
+### Ref : P252
+
+# 2. signal函数
 
     #include <signal.h>
-    void (*signal(int sig, void (*func)(int)))(int);
-    
-通过它处理信号。
+    void (*signal(int signo, void (*func)(int)))(int);
 
-这个函数已经过时，不建议继续使用。
+### 返回值
 
-### Demo
+- 成功，返回当前的信号处理配置
+- 失败，返回SIG_ERR
+
+### 参数
+
+- signo
+
+图10-1中的信号名。
+
+- func
+
+常量SIG_IGN（忽略此信号）、常量SIG_DFL（执行系统默认动作）或当接到此信号后要调用的函数地址。
+
+*注意：* 这个函数已经过时，不建议继续使用。
+
+## Demo 1
 
 处理Ctrl + c信号。
 
-<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_signal.c>
+<https://github.com/breakerthb/LinuxPrograming/tree/master/SRC_LP/11_ProceeAndSignal/demo_signal.c>
 
 第一次按下Ctrl+c，ouch捕获，设置为默认。第二次按下结束。
+
+## Demo 2
+
+捕捉两个用户自定义信号，并打印。
+
+<https://github.com/breakerthb/LinuxPrograming/tree/master/SRC_AP/signals/sigusr.c>
+
+运行结果：
+
+![10-2](https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/PIC/10-2.png)
+
+
+### PS
+
+- 程序启动时，所有信号都是默认相应状态
+- fork时，子进程继承了父进程的处理方式
+
+# 3. 不可靠的信号
+
+不可靠是指信号可能会丢失。
+
+# 4. 中断的系统调用
+
+# 5. 可重入函数
+
+
 
 ## 4.3 发送信号
 
@@ -126,6 +159,11 @@ ref : [任务管理](https://www.zybuluo.com/breakerthb/note/429591)
     int sigemptyset(sigset_t* set);
     int sigfillset(sigset_t* set);
     int sigdelset(sigset_t* set, int signo);
+    
+    
+    
+    
+    
     
     
 ## 6.4 文件流错误
@@ -280,25 +318,6 @@ flags参数控制修改方式：
 通过mmap存取一个结构化数据文件。
 
 
-
-
-
-# 4. 临时文件
-
-    #include <stdio.h>
-    
-    char *tmpnam(char* s);
-    
-返回一个不与任何文件同名的有效文件名
-
-    #include <stdio.h>
-    
-    FILE *tmpfile(void);
-    
-给文件命名的同时打开它。
-
-### Demo：tmpam.c
-
 # 5. 用户信息
 
     #include <sys/types.h>
@@ -327,8 +346,3 @@ flags参数控制修改方式：
     
     void syslog(int priority, const char *message, arguments ...);
     
-# 8. 资源和限制
-
-# 9. 时间和日期
-
-Ref : <https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/Time.md>

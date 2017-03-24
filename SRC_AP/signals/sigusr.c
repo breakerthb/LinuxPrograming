@@ -2,8 +2,7 @@
 
 static void	sig_usr(int);	/* one handler for both signals */
 
-int
-main(void)
+int main(void)
 {
 	if (signal(SIGUSR1, sig_usr) == SIG_ERR)
 		err_sys("can't catch SIGUSR1");
@@ -13,8 +12,7 @@ main(void)
 		pause();
 }
 
-static void
-sig_usr(int signo)		/* argument is signal number */
+static void sig_usr(int signo)		/* argument is signal number */
 {
 	if (signo == SIGUSR1)
 		printf("received SIGUSR1\n");

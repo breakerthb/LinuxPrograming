@@ -16,8 +16,7 @@ main()
 	exit(0);
 }
 
-void
-make_temp(char *template)
+void make_temp(char *template)
 {
 	int			fd;
 	struct stat	sbuf;
