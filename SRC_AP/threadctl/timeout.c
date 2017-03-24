@@ -94,8 +94,7 @@ retry(void *arg)
 	pthread_mutex_unlock(&mutex);
 }
 
-int
-main(void)
+int main(void)
 {
 	int				err, condition, arg;
 	struct timespec	when;

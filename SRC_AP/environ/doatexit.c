@@ -14,7 +14,7 @@ int main(void)
 		err_sys("can't register my_exit1");
 
 	printf("main is done\n");
-	return(0); // like exit(0)
+	return(0);
 }
 
 static void my_exit1(void)
