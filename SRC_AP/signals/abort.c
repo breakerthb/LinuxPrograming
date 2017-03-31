@@ -3,15 +3,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void
-abort(void)			/* POSIX-style abort() function */
+void abort(void)			/* POSIX-style abort() function */
 {
 	sigset_t			mask;
 	struct sigaction	action;
 
 	/* Caller can't ignore SIGABRT, if so reset to default */
 	sigaction(SIGABRT, NULL, &action);
-	if (action.sa_handler == SIG_IGN) {
+	if (action.sa_handler == SIG_IGN) 
+	{
 		action.sa_handler = SIG_DFL;
 		sigaction(SIGABRT, &action, NULL);
 	}

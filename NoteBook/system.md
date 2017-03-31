@@ -32,21 +32,37 @@ exec执行失败(不能执行shell)
 
 fork exec waitpid 都执行成功。
 
+# 3. 实现方法
+
+## 3.1 方法一
+
 system的一种实现方法(没有进程通信)：
 
 <https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP/proc/system.c>
 
 测试这个实现方式：
 
-<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP/proc/system1.c>
+<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP/proc/systest1.c>
 
-## system优势
+注意：
+
+在执行system时，要阻止system函数获得子进程的终止状态。使用如下：
+
+<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP/signals/systest2.c>
+
+## 3.2 方法二
+
+<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP/signals/system.c>
+
+这个实现中加入了所有需要的信号处理。
+
+# 4.system优势
 
 在执行fork和exec的过程中，system进行了各种出错处理和信号处理。
 
 不过，因为它需要先启动一个新的shell，这对shell安装情况和环境的依赖很大。执行效率也不高。
 
-# 3. 实例
+# 5. 实例
 
 <https://github.com/breakerthb/LinuxPrograming/tree/master/SRC_LP/11_ProceeAndSignal/demo_system.c>
 

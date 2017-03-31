@@ -3,8 +3,7 @@
 #include	<signal.h>
 #include	<unistd.h>
 
-int
-system(const char *cmdstring)	/* with appropriate signal handling */
+int system(const char *cmdstring)	/* with appropriate signal handling */
 {
 	pid_t				pid;
 	int					status;
@@ -26,9 +25,12 @@ system(const char *cmdstring)	/* with appropriate signal handling */
 	if (sigprocmask(SIG_BLOCK, &chldmask, &savemask) < 0)
 		return(-1);
 
-	if ((pid = fork()) < 0) {
+	if ((pid = fork()) < 0) 
+	{
 		status = -1;	/* probably out of processes */
-	} else if (pid == 0) {			/* child */
+	} 
+	else if (pid == 0) /* child */
+	{	
 		/* restore previous signal actions & reset signal mask */
 		sigaction(SIGINT, &saveintr, NULL);
 		sigaction(SIGQUIT, &savequit, NULL);
@@ -36,9 +38,12 @@ system(const char *cmdstring)	/* with appropriate signal handling */
 
 		execl("/bin/sh", "sh", "-c", cmdstring, (char *)0);
 		_exit(127);		/* exec error */
-	} else {						/* parent */
+	} 
+	else /* parent */
+	{						
 		while (waitpid(pid, &status, 0) < 0)
-			if (errno != EINTR) {
+			if (errno != EINTR) 
+			{
 				status = -1; /* error other than EINTR from waitpid() */
 				break;
 			}

@@ -12,6 +12,7 @@
 ||第8章|[进程控制](https://github.com/breakerthb/LinuxPrograming/blob/master/08-ProcessCtrl.md)||
 ||第9章|[进程关系](https://github.com/breakerthb/LinuxPrograming/blob/master/09-ProcessRelation.md)||
 |进程间通信|第10章|[信号](https://github.com/breakerthb/LinuxPrograming/blob/master/10-Signal.md)||
+||第11章|[线程](https://github.com/breakerthb/LinuxPrograming/blob/master/11-Thread.md)||
 |出错处理||||
 |用户标识||||
 

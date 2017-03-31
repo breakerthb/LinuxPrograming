@@ -101,248 +101,224 @@
 
 # 5. 可重入函数
 
+### Ref : P262
+
+# 6. SIGCLD语义
+
+# 7. 可靠信号术语和语义
+
+# 8. kill() raise()
+
+- kill函数将信号发送给进程或进程组
+- raise函数允许进程向自身发送信号
 
 
-## 4.3 发送信号
-
-### kill
-
-    #incluld <sys/types.h>
     #include <signal.h>
     
     int kill(pid_t pid, int sig);
+    int raise(int sig);
     
-把信号sig发给进程pid。
+### 返回
 
-### alarm
+- 成功，返回0
+- 失败，返回-1
+
+调用
+
+    raise(sig);
+    
+等价于：
+
+    kill(getpid(), signo);
+    
+|||
+|:-:|:-:|
+|pid > 0|发送给进程pid|
+|pid == 0|发送给进程组中的所有进程|
+|pid < 0|发送给进程组id等于pid绝对值的进程|
+|pid == −1|发送给有权限的所有进程（能给谁发就给谁发）|
+
+
+# 9. alarm() pause()
+
+alarm设置一个定时器，超时时会产生一个SIGALRM信号。
 
     #include <unistd.h>
-    
     unsigned int alarm(unsigned int seconds);
 
-安排在seconds之后安排一个SIGALRM信号。
+### 返回值
 
-### pause
+0或者定时到产生信号之间的秒数。
 
     #include <unistd.h>
-    
     int pause(void);
     
 把程序挂起到收到一个信号为止。
     
-### Demo
+### Demo 1
 
 - fork一个子进程
 - 安排好消息捕获后暂停
 - 子进程sleep5秒后向父进程发送一个SIGALRM信号
 - 父进程收到一个信号后继续运行
 
-<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_alarm.c>
+<https://github.com/breakerthb/LinuxPrograming/tree/master/SRC_LP/11_ProceeAndSignal/demo_alarm.c>
 
-## 4.4 sigaction函数
+### Demo 2
+
+让自己休眠一段时间
+
+<https://github.com/breakerthb/LinuxPrograming/tree/master/SRC_AP/signals/sleep1.c>
+
+# 10. 信号集
+
+表示多个信号的数据类型。
+
+
+    #include <signal.h>
+
+    int sigemptyset(sigset_t* set); // 初始化set指向的信号集，清除所有信号
+    int sigfillset(sigset_t* set);  // 初始化set指向的信号集，使其包含所有信号
+    int sigaddset(sigset_t* set, int signo);    // 添加一个信号
+    int sigdelset(sigset_t* set, int signo);    // 删除一个信号
+    
+    int sigismember(const sigset_t *set, int signo);
+
+## 实现方法
+
+用一个32位的int表示31个信号，某个信号设置了为1，没设置为0。
+
+<https://github.com/breakerthb/LinuxPrograming/blob/master/SRC_AP/signals/setops.c>
+
+# 11. sigprocmask()
+
+定义当前阻塞而不能递送给该进程的信号集。
+
+    #include <signal.h>
+    int sigprocmask(int how, const sigset_t *restrict set, sigset_t *restrict oset);
+
+### Ref : P275
+
+# 12. sigpending()
 
     #include <signal.h>
     
-    int sigaction(int sig, const struct sigaction* act, struct sigaction* oact);
+    int sigpending(sigset_t *set);
     
+通过set返回一个信号集，其中的各个信号是阻塞不能递送的。
+
+### Ref : P276
+
+# 13. sigaction()
+
+检查或者修改与指定信号有关的处理动作。
+
+    #include <signal.h>
+    int sigaction(int signo, const struct sigaction *restrict act, struct sigaction *restrict oact);
+
 推荐使用的信号接口。用来替代signal函数。
 
-<https://github.com/breakerthb/LinuxPrograming/tree/master/11_ProceeAndSignal/demo_sigaction.c>
+### 参数
+
+- signo
+
+需要检查或修改的信号no
+
+- act
+
+要修改的动作
+
+- oact
+
+返回目前的关联动作
+
+    struct sigaction {
+        void (*sa_handler)(int);    /* addr of signal handler, or SIG_IGN, or SIG_DFL */
+        sigset_t sa_mask;           /* additional signals to block */
+        int sa_flags;               /* signal options, Figure 10.16 alternate handler */
+        void (*sa_sigaction)(int, siginfo_t *, void *);
+    };
+
+### Demo 1
+
+用sigaction实现signal
+
+    #include "apue.h"
+    /* Reliable version of signal(), using POSIX sigaction(). */
+    Sigfunc *   signal(int signo, Sigfunc *func)
+    {
+        struct sigaction act, oact;
+        act.sa_handler = func;
+        sigemptyset(&act.sa_mask);
+        act.sa_flags = 0;
+        if (signo == SIGALRM) 
+        {
+            #ifdef SA_INTERRUPT
+            act.sa_flags |= SA_INTERRUPT;
+            #endif
+        } 
+        else 
+        {
+            act.sa_flags |= SA_RESTART;
+        }
+        if (sigaction(signo, &act, &oact) < 0)
+            return(SIG_ERR);
+        
+        return(oact.sa_handler);
+    }
+
+### Demo 2
+
+<https://github.com/breakerthb/LinuxPrograming/tree/master/SRC_LP/11_ProceeAndSignal/demo_sigaction.c>
 
 按下组合件Ctrl+C能够看到捕获信号，但程序仍然进行。按下Ctrl+\程序结束。
 
-## 4.5 信号集
+# 14. sigsetjmp() siglongjmp()
+
+# 15. sigsuspend()
+
+# 16. abort()
+
+使程序异常终止。
+
+    #include <stdlib.h>
+    void abort(void);
+    
+此函数将SIGABRT信号发给调用进程。相当于：
+
+    raise(SIGABRT);
+    
+### Demo
+
+<https://github.com/breakerthb/LinuxPrograming/tree/master/SRC_AP/signals/abort.c>
+    
+    
+# 17. system()的另外实现方式
+
+[system()](https://github.com/breakerthb/LinuxPrograming/blob/master/NoteBook/system.md)
+
+# 18. sleep() nanosleep() clock_nanosleep()
+
+### Ref : P298
+
+# 19. sigqueue()
+
+让信号排队。
 
     #include <signal.h>
+    int sigqueue(pid_t pid, int signo, const union sigval value)
+    Returns: 0 if OK, −1 on error
     
-    int sigaddset(sigset_t* set, int signo);
-    int sigemptyset(sigset_t* set);
-    int sigfillset(sigset_t* set);
-    int sigdelset(sigset_t* set, int signo);
+# 20. 作业控制信号
+
+    SIGCHLD Child process has stopped or terminated.
+    SIGCONT Continue process, if stopped.
+    SIGSTOP Stop signal (can’t be caught or ignored).
+    SIGTSTP Interactive stop signal.
+    SIGTTIN Read from controlling terminal by background process group member.
+    SIGTTOU Write to controlling terminal by a background process group member.
     
-    
-    
-    
-    
-    
-    
-## 6.4 文件流错误
+# 21. 信号名和编号
 
-为了表明错误，许多stdio库函数会返回一个超出范围的值，比如空指针或EOF常数。此时，错误由外部变量errno指出：
-
-    #include <erro.h>
-    
-    extern int errno;
-    
-这个值只有在函数失败时才有意义。
-
-也可以通过检查文件流状态判断是否出错。
-
-    #include <stdio.h>
-    
-    int ferror(FILE *stream);
-    int feof(FILE *stream);
-    void clearerr(FILE *stream);
-
-## 6.5 文件流和文件描述符
-
-    #include <stdio.h>
-    
-    int fileno(FILE *stream);
-    FILE *fdopen(int fd, const char *mode);
-    
-# 7. 文件和目录的维护
-
-
-# 9. 错误处理
-
-## 9.1 strerror函数
-
-把错误代码映射成一个字符串
-
-    #incluce <string.h>
-    
-    char *strerror(int errnum);
-    
-## 9.2 perror函数
-
-把错误代码映射成一个字符串，并输出到标输出。
-
-    #include <stdio.h>
-    
-    void perror(const char *s);
-    
-# 10 /proc文件系统
-
-这个目录中有很多特殊的文件用来对驱动程序和内核信息进行访问。
-
-## 10.1 /proc/cpuinfo
-
-CPU的详细信息
-
-    $ cat /proc/cpuinfo
-    
-## 10.2 /proc/meminfo
-
-内存使用情况
-
-    $ cat /proc/meminfo
-    
-## 10.3 /proc/version
-
-内核版本信息
-
-    $ cat /proc/version
-    
-## 10.4 /proc/net/sockstat
-
-网络套接字使用统计
-
-    $ cat /proc/net/sockstat
-    
-## 10.5 /proc/sys/fs/file-max
-
-同时打开文件总数
-
-    $ cat /proc/sys/fs/file-max
-    $ echo 80000 > /proc/sys/fs/file-max
-
-# 11. 高级主题：fcntl和mmap
-
-## 11.1 fcntl系统调用
-
-
-
-## 11.2 mmap函数
-
-内存映射函数，建立一段可以被多个程序读写的内存。
-
-可以通过管理内存的方式读写文件。
-
-    #include <sys/mman.h>
-    
-    void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t off);
-    
-- addr
-
-请求某个特定的内存地址。推荐使用0，系统会自动分配地址。这样执行效率最高。
-
-- off
-
-共享内存段访问文件的起始位置。
-
-- fd
-打开文件标识符。
-
-- prot
-设置内存访问权限
-
-
-    PROT_READ   允许读该内存段
-    PROT_WRITE  允许写该内存段
-    PROT_EXEC   允许执行该内存段
-    PROT_NONE   该内存段不能被访问
-    
-- flags
-控制程序对该内存段的改变所造成的影响
-
-
-    MAP_PRIVATE 内存段私有，对它的修改只对本进程有效
-    MAP_SHARED  把对该内存的修改保存到磁盘文件中
-    MAP_FIXED   该内存段必须位于addr指定的地址处
-    
-### msync函数
-
-把对内存段的修改写回到映射文件中
-
-    #include <sys/mman.h>
-    
-    int msync(void *addr, size_t len, int flags);
-    
-flags参数控制修改方式：
-
-    MS_ASYNC        采用异步写方式
-    MS_SYNC         采用同步写方式
-    MS_INVALLDATE   从文件中读回数据
-    
-### munmap函数
-
-释放内存段
-
-    #include <sys/mman.h>
-    
-    int munmap(void *addr, size_t len);
-    
-### Demo 
-
-通过mmap存取一个结构化数据文件。
-
-
-# 5. 用户信息
-
-    #include <sys/types.h>
-    #include <unistd.h>
-    
-    uid_t getuid(void); // 返回UID
-    char *getlogin(void); // 返回登录名
-    
-更有效的用户信息接口
-
-    #include <sys/types.h>
-    #include <pwd.h>
-    
-    struct passwd *getpwuid(uid_t uid);
-    struct passwd *getpwnam(const char *name);
-    
-# 6. 主机信息
-
-- gethostname
-- uname
-- gethostid
-
-# 7. 日志
-
-    #include <syslog.h>
-    
-    void syslog(int priority, const char *message, arguments ...);
+### Ref : P303
     
