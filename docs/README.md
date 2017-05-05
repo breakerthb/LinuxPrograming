@@ -13,6 +13,15 @@
 ||第9章|[进程关系](https://github.com/breakerthb/LinuxPrograming/blob/master/09-ProcessRelation.md)||
 |进程间通信|第10章|[信号](https://github.com/breakerthb/LinuxPrograming/blob/master/10-Signal.md)||
 ||第11章|[线程](https://github.com/breakerthb/LinuxPrograming/blob/master/11-Thread.md)||
+||第12章|[线程控制](https://github.com/breakerthb/LinuxPrograming/blob/master/12-ThreadCtrl.md)||
+||第13章|[守护进程](https://github.com/breakerthb/LinuxPrograming/blob/master/13-Daemon.md)||
+||第14章|[高级I/O]()||
+||第15章|[进程间通信]()||
+||第16章|[网络IPC:套接字]()||
+||第17章|[高级进程间通信]()||
+||第18章|[终端I/O]()||
+||第19章|[伪终端]()||
+||第20章|[数据库函数库]()||
 |出错处理||||
 |用户标识||||
 

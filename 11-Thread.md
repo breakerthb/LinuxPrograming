@@ -10,7 +10,29 @@ fork之后，将创建出该进程的副本。这个新进程拥有自己的变�
 
 新线程拥有自己的栈和局部变量，但与它的创建者共享全局变量、文件描述符、信号处理函数和当前目录状态。
 
-# 1. 第一个线程程序
+# 1. 线程标识
+
+线程ID是唯一标识：`pthread_t`
+
+## 1.1 比较线程ID
+
+    #include <pthread.h>
+
+    int pthread_equal(pthread_t tid1, pthead_t tid2);
+
+### 返回值
+
+- 相等，非0
+- 不相等，0
+
+## 1.2 获取自身线程ID
+
+    #include <pthread.h>
+
+    pthread_t pthread_self(void);
+    //Returns: the thread ID of the calling thread 
+
+# 2. 线程创建和终止
 
 - 可重入
 
@@ -24,7 +46,7 @@ fork之后，将创建出该进程的副本。这个新进程拥有自己的变�
 
     -lpthread
     
-## 1.1 pthread_create()
+## 2.1 pthread_create()
 
 创建线程函数。
 
@@ -40,17 +62,26 @@ fork之后，将创建出该进程的副本。这个新进程拥有自己的变�
 - start_routine, 线程主体函数指针；
 - arg, start_routine函数参数。
 
-## 1.2 pthread_exit()
+### Demo : 打印线程ID
 
-终止线程函数。
+<https://github.com/breakerthb/LinuxPrograming/tree/master/SRC_AP/threads/threadid.c>
 
-    #include <pthread.h>
-    
-    void pthread_exit(void* retval);
-    
+## 2.2 pthread_exit()
+
+线程终止的三种情况：
+
+- 线程正常结束或执行`exit`、`_Exit`或`_exit`，返回值是线程的退出码
+- 被统一进程的其他线程取消
+- 调用pthread_exit函数
+
+```cpp
+#include <pthread.h>    
+void pthread_exit(void* retval);
+```    
+
 终止调用这个函数的线程，同时用retval返回变量。retval的值可以在pthread_join的第二个参数中得到。注意：retval返回的不能是局部变量，因为线程结束后所有局部变量都被销毁。
 
-## 1.3 pthread_join()
+## 2.3 pthread_join()
 
 相当于进程中的wait函数。
 
@@ -58,6 +89,8 @@ fork之后，将创建出该进程的副本。这个新进程拥有自己的变�
     
     int pthread_join(pthread_t th, void **thread_return);
     
+执行后当前线程会一直被阻塞，直到目标线程执行了`pthread_exit`
+
 ### 参数
 
 - th, 等待线程的指针
@@ -65,18 +98,45 @@ fork之后，将创建出该进程的副本。这个新进程拥有自己的变�
 
 ## Demo
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/12_Thread/demo_thread1.c>
+- 线程创建与删除
 
+<https://github.com/breakerthb/LinuxPrograming/tree/master/SRC_LP/12_Thread/demo_thread1.c>
 
 编译：
 
     $cc -D_REENTRANT demo_thread1.c -o run_thread1 -lpthread
-    
-# 2. 同步
+
+- 获取终止线程的退出码
+
+<https://github.com/breakerthb/LinuxPrograming/tree/master/SRC_AP/threads/exitstatus.c>
+
+# 3. 其他方法
+
+## 3.1 pthread_cancel()
+
+```cpp
+#include <pthread.h>
+int pthread_cancel(pthread_t tid);
+Returns: 0 if OK, error number on failure
+```
+
+## 3.3 pthread_cleanup
+
+```cpp
+#include <pthread.h>
+void pthread_cleanup_push(void (*rtn)(void *), void *arg);
+void pthread_cleanup_pop(int execute);
+```
+
+# 4. 线程和进程的关系
+
+![11-6](https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/PIC/11-6.png)
+
+# 5. 线程同步
 
 两种基本方法：信号量和互斥量
 
-## 2.1 信号量
+## 5.1 信号量
 
 信号量是一个特殊的变量，它可以被增加减少，但对它的关键访问保持原子操作。
 
@@ -123,199 +183,44 @@ fork之后，将创建出该进程的副本。这个新进程拥有自己的变�
 信号量常用作主线程控制子线程流程。
 
 
-## 2.2 互斥量
+## 5.2 互斥量
 
+```cpp
+#include <pthread.h>
+int pthread_mutex_init(pthread_mutex_t *restrict mutex,const pthread_mutexattr_t *restrict attr);
+int pthread_mutex_destroy(pthread_mutex_t *mutex);
+//Both return: 0 if OK, error number on failure
+```
 
+```cpp
+#include <pthread.h>
+int pthread_mutex_lock(pthread_mutex_t *mutex);
+int pthread_mutex_trylock(pthread_mutex_t *mutex);
+int pthread_mutex_unlock(pthread_mutex_t *mutex);
+// All return: 0 if OK, error number on failure
+```
+### Ref:P320
 
-# 3. 线程属性
+## 5.3 避免死锁
 
+### Ref:P322
 
-# 4. 取消一个线程
+## 5.4 pthread_mutex_timedlock
 
+```cpp
+#include <pthread.h>
+#include <time.h>
+int pthread_mutex_timedlock(pthread_mutex_t *restrict mutex, const struct timespec *restrict tsptr);
+//Returns: 0 if OK, error number on failure
+```
 
-# 5. 多线程
+## 5.5 读写锁
 
+## 5.6 带有超时的读写锁
 
+## 5.7 条件变量
 
+## 5.8 自旋锁
 
-## 6.4 文件流错误
-
-为了表明错误，许多stdio库函数会返回一个超出范围的值，比如空指针或EOF常数。此时，错误由外部变量errno指出：
-
-    #include <erro.h>
-    
-    extern int errno;
-    
-这个值只有在函数失败时才有意义。
-
-也可以通过检查文件流状态判断是否出错。
-
-    #include <stdio.h>
-    
-    int ferror(FILE *stream);
-    int feof(FILE *stream);
-    void clearerr(FILE *stream);
-
-## 6.5 文件流和文件描述符
-
-    #include <stdio.h>
-    
-    int fileno(FILE *stream);
-    FILE *fdopen(int fd, const char *mode);
-    
-# 7. 文件和目录的维护
-
-
-# 9. 错误处理
-
-## 9.1 strerror函数
-
-把错误代码映射成一个字符串
-
-    #incluce <string.h>
-    
-    char *strerror(int errnum);
-    
-## 9.2 perror函数
-
-把错误代码映射成一个字符串，并输出到标输出。
-
-    #include <stdio.h>
-    
-    void perror(const char *s);
-    
-# 10 /proc文件系统
-
-这个目录中有很多特殊的文件用来对驱动程序和内核信息进行访问。
-
-## 10.1 /proc/cpuinfo
-
-CPU的详细信息
-
-    $ cat /proc/cpuinfo
-    
-## 10.2 /proc/meminfo
-
-内存使用情况
-
-    $ cat /proc/meminfo
-    
-## 10.3 /proc/version
-
-内核版本信息
-
-    $ cat /proc/version
-    
-## 10.4 /proc/net/sockstat
-
-网络套接字使用统计
-
-    $ cat /proc/net/sockstat
-    
-## 10.5 /proc/sys/fs/file-max
-
-同时打开文件总数
-
-    $ cat /proc/sys/fs/file-max
-    $ echo 80000 > /proc/sys/fs/file-max
-
-# 11. 高级主题：fcntl和mmap
-
-## 11.1 fcntl系统调用
-
-
-
-## 11.2 mmap函数
-
-内存映射函数，建立一段可以被多个程序读写的内存。
-
-可以通过管理内存的方式读写文件。
-
-    #include <sys/mman.h>
-    
-    void *mmap(void *addr, size_t len, int prot, int flags, int fd, off_t off);
-    
-- addr
-
-请求某个特定的内存地址。推荐使用0，系统会自动分配地址。这样执行效率最高。
-
-- off
-
-共享内存段访问文件的起始位置。
-
-- fd
-打开文件标识符。
-
-- prot
-设置内存访问权限
-
-
-    PROT_READ   允许读该内存段
-    PROT_WRITE  允许写该内存段
-    PROT_EXEC   允许执行该内存段
-    PROT_NONE   该内存段不能被访问
-    
-- flags
-控制程序对该内存段的改变所造成的影响
-
-
-    MAP_PRIVATE 内存段私有，对它的修改只对本进程有效
-    MAP_SHARED  把对该内存的修改保存到磁盘文件中
-    MAP_FIXED   该内存段必须位于addr指定的地址处
-    
-### msync函数
-
-把对内存段的修改写回到映射文件中
-
-    #include <sys/mman.h>
-    
-    int msync(void *addr, size_t len, int flags);
-    
-flags参数控制修改方式：
-
-    MS_ASYNC        采用异步写方式
-    MS_SYNC         采用同步写方式
-    MS_INVALLDATE   从文件中读回数据
-    
-### munmap函数
-
-释放内存段
-
-    #include <sys/mman.h>
-    
-    int munmap(void *addr, size_t len);
-    
-### Demo 
-
-通过mmap存取一个结构化数据文件。
-
-
-# 5. 用户信息
-
-    #include <sys/types.h>
-    #include <unistd.h>
-    
-    uid_t getuid(void); // 返回UID
-    char *getlogin(void); // 返回登录名
-    
-更有效的用户信息接口
-
-    #include <sys/types.h>
-    #include <pwd.h>
-    
-    struct passwd *getpwuid(uid_t uid);
-    struct passwd *getpwnam(const char *name);
-    
-# 6. 主机信息
-
-- gethostname
-- uname
-- gethostid
-
-# 7. 日志
-
-    #include <syslog.h>
-    
-    void syslog(int priority, const char *message, arguments ...);
-    
+## 5.9 屏障
 
