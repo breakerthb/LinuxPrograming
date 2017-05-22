@@ -157,7 +157,6 @@ type指定IO流的读写方式：
 压如缓冲区一个字符：
 
     #include <stdio.h>
-    
     int ungetc(int c, FILE* fp);
     
 ### 返回值
