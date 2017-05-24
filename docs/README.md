@@ -31,7 +31,7 @@
 |||curses||  
 |||数据管理||  
 |||MySQL||  
-|||[Makefile](https://github.com/breakerthb/LinuxPrograming/blob/master/Makefile.md)|开发工具 Makefile 使用|  
+|||||  
 |||调试||  
 |||[进程和信号](https://github.com/breakerthb/LinuxPrograming/blob/master/11_ProcessAndSignal.md)|system/exec/fork/wait/waitpid/signal/kill/pause/sigaction|  
 |||[POSIX线程](https://github.com/breakerthb/LinuxPrograming/blob/master/12_Thread.md)|多线程编程|    
@@ -41,6 +41,10 @@
 |||用GTK+进行GNOME编程||  
 |||用Qt进行KDE编程||  
 |||Linux标准||  
+
+[GCC使用](https://github.com/breakerthb/LinuxPrograming/blob/master/GCC.md)
+
+[Makefile](https://github.com/breakerthb/LinuxPrograming/blob/master/Makefile.md)
 
 ----
 
