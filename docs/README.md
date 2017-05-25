@@ -74,6 +74,7 @@
 [时间方法](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/Time.md)  
 [定时器](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/Timer.md)  
 
+[驱动安装](https://github.com/breakerthb/LinuxPrograming/tree/master/NoteBook/DriverInstall.md)  
 ----
 
 # Ref 
