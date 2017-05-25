@@ -205,9 +205,11 @@ EG:
 
 注意：
 
-    -rm 表示忽略rm的执行结果
-    install依赖myapp，先生成myapp才能安装。
-    由于执行规则时启动一个shell，因此需要用反斜杠让它们理论上是一行。
+> -rm 表示忽略rm的执行结果
+> install依赖myapp，先生成myapp才能安装
+> 由于执行规则时启动一个shell，因此需要用反斜杠让它们理论上是一行
+> 用这种方法可以作为项目的整体Makefile
+
 
 # 5. 内置规则
 
@@ -234,6 +236,19 @@ EG:
 ----
 
 ### Demo - MAIN
+
+- Main Project Makefile
+
+```cpp
+SUBDIRS = logger loggerTest interface interfaceTest BusinessLogicLayer BusinessLogicLayerTest
+ 
+all:
+        @for subdir in $(SUBDIRS); \
+        do \
+                echo "making $@ in $$subdir"; \
+                ( cd $$subdir && $(MAKE) -f Makefile $@ ) || exit 1; \
+        done
+```
 
 - Dynamic Lib
 
