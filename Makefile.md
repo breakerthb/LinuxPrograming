@@ -141,7 +141,9 @@ Makefile：
 EG:
 
 	Module1_1.o Module1_2.o : Module1_1.cpp Module1_2.cpp
-	则
+	
+则
+
 	$@ -- Module1_1.o Module1_2.o
 	$^ -- Module1_1.cpp Module1_2.cpp
 	$< -- Module1_1.cpp
@@ -205,10 +207,10 @@ EG:
 
 注意：
 
-> -rm 表示忽略rm的执行结果
-> install依赖myapp，先生成myapp才能安装
-> 由于执行规则时启动一个shell，因此需要用反斜杠让它们理论上是一行
-> 用这种方法可以作为项目的整体Makefile
+> -rm 表示忽略rm的执行结果  
+> install依赖myapp，先生成myapp才能安装  
+> 由于执行规则时启动一个shell，因此需要用反斜杠让它们理论上是一行  
+> 用这种方法可以作为项目的整体Makefile  
 
 
 # 5. 内置规则
@@ -231,11 +233,22 @@ EG:
 
 ### Demo - makefile5
 
-# 8. Makefile文件和子目录
-
 ----
+## Makefile Demo
 
-### Demo - MAIN
+- Dynamic Lib
+
+<https://github.com/breakerthb/JsonCPPDemo/blob/master/DynamicLib/Makefile>
+
+- Static Lib
+
+<https://github.com/breakerthb/JsonCPPDemo/blob/master/StaticLib/Makefile> 
+
+- Execute File
+
+<https://github.com/breakerthb/JsonCPPDemo/blob/master/Makefile>
+
+## Simple Makefile Demo
 
 - Main Project Makefile
 
@@ -264,7 +277,7 @@ all:
 
 extend
 
-# 4.make是如何工作的
+# 1.make是如何工作的
 
 在默认的方式下，也就是我们只输入make命令。
 
@@ -274,68 +287,74 @@ extend
 - 4、如果edit所依赖的.o文件也不存在，那么make会在当前文件中找目标为.o文件的依赖性，如果找到则再根据那一个规则生成.o文件。（这有点像一个堆栈的过程）
 - 5、当然，你的C文件和H文件是存在的，于是make会生成 .o 文件，然后再用 .o 文件生命make的终极任务，也就是执行文件edit了。
 
-# 5.makefile中使用变量
+# 2.makefile中使用变量
 
 在上面的例子中，先让我们看看edit的规则：
 
-	edit : main.o kbd.o command.o display.o insert.o search.o files.o utils.o
+```cpp
+edit : main.o kbd.o command.o display.o insert.o search.o files.o utils.o
 	cc -o edit main.o kbd.o command.o display.o insert.o search.o files.o utils.o
+```
 
 makefile的变量也就是一个字符串，理解成C语言中的宏可能会更好。
 
 	objects = main.o kbd.o command.o display.o insert.o search.o files.o utils.o
 
-于是，我们就可以很方便地在我们的makefile中以“$(objects)”的方式来使用这个变量了，于是我们的改良版makefile就变成下面这个样子：
+于是，我们就可以很方便地在我们的makefile中以`$(objects)`的方式来使用这个变量了，于是我们的改良版makefile就变成下面这个样子：
 
-	objects = main.o kbd.o command.o display.o insert.o search.o files.o utils.o
+```cpp
+objects = main.o kbd.o command.o display.o insert.o search.o files.o utils.o
 
-	edit : $(objects)
-		cc -o edit $(objects)
-	main.o : main.c defs.h
-		cc -c main.c
-	kbd.o : kbd.c defs.h command.h
-		cc -c kbd.c
-	command.o : command.c defs.h command.h
-		cc -c command.c
-	display.o : display.c defs.h buffer.h
-		cc -c display.c
-	insert.o : insert.c defs.h buffer.h
-		cc -c insert.c
-	search.o : search.c defs.h buffer.h
-		cc -c search.c
-	files.o : files.c defs.h buffer.h command.h
-		cc -c files.c
-	utils.o : utils.c defs.h
-		cc -c utils.c
+edit : $(objects)
+	cc -o edit $(objects)
+main.o : main.c defs.h
+	cc -c main.c
+kbd.o : kbd.c defs.h command.h
+	cc -c kbd.c
+command.o : command.c defs.h command.h
+	cc -c command.c
+display.o : display.c defs.h buffer.h
+	cc -c display.c
+insert.o : insert.c defs.h buffer.h
+	cc -c insert.c
+search.o : search.c defs.h buffer.h
+	cc -c search.c
+files.o : files.c defs.h buffer.h command.h
+	cc -c files.c
+utils.o : utils.c defs.h
+	cc -c utils.c
 
-	clean :
-		rm edit $(objects)
+clean :
+	rm edit $(objects)
+```
 
-# 6.让make自动推导
+# 3.让make自动推导
 
 只要make看到一个[.o]文件，它就会自动的把[.c]文件加在依赖关系中，如果make找到一个whatever.o，那么whatever.c，就会是whatever.o的依赖文件。并且 cc -c whatever.c 也会被推导出来，于是，我们的makefile再也不用写得这么复杂。
 
-	objects = main.o kbd.o command.o display.o insert.o search.o files.o utils.o
-	
-	edit : $(objects)
-		cc -o edit $(objects)
-	
-	main.o : defs.h
-	kbd.o : defs.h command.h
-	command.o : defs.h command.h
-	display.o : defs.h buffer.h
-	insert.o : defs.h buffer.h
-	search.o : defs.h buffer.h
-	files.o : defs.h buffer.h command.h
-	utils.o : defs.h
-	
-	.PHONY : clean
-	clean :
+```cpp
+objects = main.o kbd.o command.o display.o insert.o search.o files.o utils.o
+
+edit : $(objects)
+	cc -o edit $(objects)
+
+main.o : defs.h
+kbd.o : defs.h command.h
+command.o : defs.h command.h
+display.o : defs.h buffer.h
+insert.o : defs.h buffer.h
+search.o : defs.h buffer.h
+files.o : defs.h buffer.h command.h
+utils.o : defs.h
+
+.PHONY : clean
+clean :
 	rm edit $(objects)
+```
 
 这种方法，也就是make的“隐晦规则”。上面文件内容中，“.PHONY”表示，clean是个伪目标文件。
 
-# 7.另类风格的makefile(不推荐)
+# 4.另类风格的makefile(不推荐)
 
 即然我们的make可以自动推导命令，那么我看到那堆[.o]和[.h]的依赖就有点不爽，那么多的重复的[.h]，能不能把其收拢起来，好吧，没有问题，这个对于make来说很容易，谁叫它提供了自动推导命令和文件的功能呢？来看看最新风格的makefile吧。
 
@@ -357,24 +376,24 @@ makefile的变量也就是一个字符串，理解成C语言中的宏可能会�
 - 文件的依赖关系看不清楚
 - 如果文件一多，要加入几个新的.o文件，那就理不清楚了。
 
-# 8.清空目标文件的规则
+# 5.清空目标文件的规则
 
 每个Makefile中都应该写一个清空目标文件（.o和执行文件）的规则，这不仅便于重编译，也很利于保持文件的清洁。
 
 	clean:
-	rm edit $(objects)
+		rm edit $(objects)
 
 更为稳健的做法是：
 
 	.PHONY : clean
 	clean :
-	-rm edit $(objects)
+		-rm edit $(objects)
 
 **("-" 表示出错也认为是成功)**
 
-# 9. C++环境搭建
+# 6. C++环境搭建
 
-## 1.工程目录结构
+## 6.1.工程目录结构
 
 APL (Alex's Programming Library)
 
@@ -413,7 +432,7 @@ APL (Alex's Programming Library)
 	    -bin   //存放应用可执行程序
 	   -...
 
-## 2.Makefile的作用
+## 6.2.Makefile的作用
 
 - Makefile(3)
 
@@ -431,75 +450,85 @@ APL (Alex's Programming Library)
 
 定义通用的目录信息变量、编译器参数变量和通用的依赖关系。(也可命名为*.mk)
 
-## 3.Makefile实现
+## 6.3.Makefile实现
 
 module1下的Makefile如下：
 
-	#
-	# Makefile for module1
-	#
-	all : Module1_1.o Module1_2.o
-	Module1_1.o : Module1_1.cpp
+```cpp
+#
+# Makefile for module1
+#
+all : Module1_1.o Module1_2.o
+
+Module1_1.o : Module1_1.cpp
 	g++ -c $^ -I ../../include
-	Module1_2.o : Module1_2.cpp
+Module1_2.o : Module1_2.cpp
 	g++ -c $^ -I ../../include
-	clean :
+	
+clean :
 	rm -f *.o
+```
 
 module2下的Makefile如下：
 
-	#
-	# Makefile for module2
-	#
-	all : Module2_1.o Module2_2.o
-	Module2_1.o : Module2_1.cpp
+```cpp
+#
+# Makefile for module2
+#
+all : Module2_1.o Module2_2.o
+Module2_1.o : Module2_1.cpp
 	g++ -c $^ -I ../../include
-	Module2_2.o : Module2_2.cpp
+Module2_2.o : Module2_2.cpp
 	g++ -c $^ -I ../../include
-	clean :
+clean :
 	rm -f *.o
+```
 
 make一下，顺利产生相应的.o文件。
 
 ===============================================
 建立一个公用的文件来存放一些通用的东西
 
-	# 
-	# Properties for demo's Makefile 
-	# 
-	MAKEFILE = Makefile
-	BASEDIR = $(HOME)/proj/demo
-	####################
-	# Directory layout #
-	####################
-	SRCDIR = $(BASEDIR)/src
-	INCLUDEDIR = $(BASEDIR)/include
-	LIBDIR = $(BASEDIRE)/lib
-	DISTDIR = $(BASEDIR)/dist
-	####################
-	# Compiler options #
-	#    F_ -- FLAG    #
-	####################
-	CC = g++
-	# Compiler search options
-	F_INCLUDE = -I$(INCLUDEDIR)
-	F_LIB = -L $(LIBDIR)
-	CFLAGS = 
-	CPPFLAGS = $(CFLAGS) $(F_INCLUDE)
+```cpp
+# 
+# Properties for demo's Makefile 
+# 
+MAKEFILE = Makefile
+BASEDIR = $(HOME)/proj/demo
+####################
+# Directory layout #
+####################
+SRCDIR = $(BASEDIR)/src
+INCLUDEDIR = $(BASEDIR)/include
+LIBDIR = $(BASEDIRE)/lib
+DISTDIR = $(BASEDIR)/dist
+####################
+# Compiler options #
+#    F_ -- FLAG    #
+####################
+CC = g++
+# Compiler search options
+F_INCLUDE = -I$(INCLUDEDIR)
+F_LIB = -L $(LIBDIR)
+CFLAGS = 
+CPPFLAGS = $(CFLAGS) $(F_INCLUDE)
+```
 
 然后修改一下，各个module中的Makefile文件，以module1为例，修改后如下：
 
-	#
-	# Makefile for module1
-	#
-	include ../../Make.properties
-	all : Module1_1.o Module1_2.o
-	Module1_1.o : Module1_1.cpp
+```cpp
+#
+# Makefile for module1
+#
+include ../../Make.properties
+all : Module1_1.o Module1_2.o
+Module1_1.o : Module1_1.cpp
 	$(CC) -c $^ $(CPPFLAGS)
-	Module1_2.o : Module1_2.cpp
+Module1_2.o : Module1_2.cpp
 	$(CC) -c $^ $(CPPFLAGS)
-	clean :
+clean :
 	rm -f *.o
+```
 
 其实这两个Makefile中还有一个隐含的重复的地方“后缀规则”来定义通用依赖规则，我在Make.properties加入下面的变量定义：
 
@@ -629,7 +658,7 @@ Makefile(5)我设计成这样：
 
 在Makefile(1)中加上install,tar等目标，使用户得到有更多的功能。
 
-
+----
 
 ## 1、“=”
 
@@ -637,9 +666,9 @@ make会将整个makefile展开后，再决定变量的值。也就是说，变�
 
 	x = foo
 	y = $(x) bar
-      x = xyz
+    x = xyz
 
-      在上例中，y的值将会是 xyz bar ，而不是 foo bar 。
+在上例中，y的值将会是 xyz bar ，而不是 foo bar 。
 
 ## 2、“:=”
 
