@@ -16,10 +16,11 @@ fork之后，将创建出该进程的副本。这个新进程拥有自己的变�
 
 ## 1.1 比较线程ID
 
-    #include <pthread.h>
+```cpp
+#include <pthread.h>
 
-    int pthread_equal(pthread_t tid1, pthead_t tid2);
-
+int pthread_equal(pthread_t tid1, pthead_t tid2);
+```
 ### 返回值
 
 - 相等，非0
@@ -27,10 +28,11 @@ fork之后，将创建出该进程的副本。这个新进程拥有自己的变�
 
 ## 1.2 获取自身线程ID
 
-    #include <pthread.h>
-
-    pthread_t pthread_self(void);
-    //Returns: the thread ID of the calling thread 
+```cpp
+#include <pthread.h>
+pthread_t pthread_self(void);
+```
+返回当前线程ID
 
 # 2. 线程创建和终止
 
@@ -50,11 +52,11 @@ fork之后，将创建出该进程的副本。这个新进程拥有自己的变�
 
 创建线程函数。
 
-    #include <pthread.h>
-    
-    int pthread_create(pthread_t* thread, pthread_attr_t* attr, 
-                    void *(*start_routine)(void*), void* arg);
-                    
+```cpp
+#include <pthread.h>
+int pthread_create(pthread_t* thread, pthread_attr_t* attr, void *(*start_routine)(void*), void* arg);
+```
+
 ### 参数
 
 - thread, 线程指针；
@@ -79,21 +81,23 @@ fork之后，将创建出该进程的副本。这个新进程拥有自己的变�
 void pthread_exit(void* retval);
 ```    
 
-终止调用这个函数的线程，同时用retval返回变量。retval的值可以在pthread_join的第二个参数中得到。注意：retval返回的不能是局部变量，因为线程结束后所有局部变量都被销毁。
+终止调用这个函数的线程，同时用retval返回变量。retval的值可以在pthread_join的第二个参数中得到。
+注意：retval返回的不能是局部变量，因为线程结束后所有局部变量都被销毁。
 
 ## 2.3 pthread_join()
 
 相当于进程中的wait函数。
 
-    #include <pthread.h>
-    
-    int pthread_join(pthread_t th, void **thread_return);
-    
+```cpp
+#include <pthread.h>
+int pthread_join(pthread_t pth, void **thread_return);
+```
+
 执行后当前线程会一直被阻塞，直到目标线程执行了`pthread_exit`
 
 ### 参数
 
-- th, 等待线程的指针
+- pth, 等待线程的指针
 - thread_return, 带回线程返回值
 
 ## Demo
@@ -147,10 +151,11 @@ void pthread_cleanup_pop(int execute);
 
 ### 创建信号量
 
-    #include <semaphore.h>
-    
-    int sem_init(sem_t *sem, int pshared, unsigned int value);
-    
+```cpp
+#include <semaphore.h>
+int sem_init(sem_t *sem, int pshared, unsigned int value);
+```
+
 - sem
 
 初始化sem指向的信号量
@@ -159,26 +164,32 @@ void pthread_cleanup_pop(int execute);
 
 信号量类型，目前Linux只支持0
 
+- value
+
+可用资源数，有几个共享资源就设为几。
+
 ### 控制信号量的值
 
-    #include <semaphore.h>
-    
-    int sem_wait(sem_t* sem);   // 原子方式减1
-    int sem_post(sem_t* sem);   // 原子方式加1
+```cpp
+#include <semaphore.h>
+int sem_wait(sem_t* sem);   // 原子方式减1
+int sem_post(sem_t* sem);   // 原子方式加1
+```
 
 当信号量的值为0时执行sem_wait，线程会等待。
 
 ### 清理信号量
 
-    #include <semaphore.h>
-    
-    int sem_destroy(sem_t* sem);
-    
+```cpp
+#include <semaphore.h>
+int sem_destroy(sem_t* sem);
+```
+
 如果信号量正被等待，则返回错误。
 
 ### Demo - thread3.c
 
-<https://raw.githubusercontent.com/breakerthb/LinuxPrograming/master/12_Thread/demo_thread3.c>
+<https://github.com/breakerthb/LinuxPrograming/tree/master/SRC_LP/12_Thread/demo_thread3.c>
 
 信号量常用作主线程控制子线程流程。
 
