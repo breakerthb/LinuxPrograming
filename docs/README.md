@@ -6,7 +6,7 @@
 |[Shell](https://github.com/breakerthb/LinuxPrograming/blob/master/02-Shell.md)|||Shell程序设计| 
 |I/O|第3章|[文件I/O](https://github.com/breakerthb/LinuxPrograming/blob/master/03-FileIO.md)|不带缓存的I/O|
 ||第4章|[文件和目录](https://github.com/breakerthb/LinuxPrograming/blob/master/04-File&Dir.md)|文件、目录|
-||第5章|[标准I/O库](https://github.com/breakerthb/LinuxPrograming/blob/master/05-StarndardIO.md)||
+||第5章|[标准I/O库](https://github.com/breakerthb/LinuxPrograming/blob/master/05-StandardIO.md)||
 ||第6章|[系统数据文件和信息](https://github.com/breakerthb/LinuxPrograming/blob/master/06-SysDataFile.md)|标准数据文件|
 |进程|第7章|[进程环境](https://github.com/breakerthb/LinuxPrograming/blob/master/07-ProcessEnv.md)||
 ||第8章|[进程控制](https://github.com/breakerthb/LinuxPrograming/blob/master/08-ProcessCtrl.md)||

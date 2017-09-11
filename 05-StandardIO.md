@@ -179,12 +179,12 @@ type指定IO流的读写方式：
 # 6. 每次一行I/O
 
     #include <stdio.h>
-    char *fgets(char *restrict buf, int n, FILE *restrict fp);
-    char *gets(char *buf );
+    char *fgets(char* buf, int n, FILE* fp);
+    char *gets(char* buf );
 
     #include <stdio.h>
-    int fputs(const char *restrict str, FILE *restrict fp);
-    int puts(const char *str);
+    int fputs(const char* str, FILE* fp);
+    int puts(const char* str);
     
 ### Ref : P122
 
@@ -194,9 +194,47 @@ type指定IO流的读写方式：
 
 # 8. 二进制I/O
 
-    #include <stdio.h>
-    size_t fread(void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp);
-    size_t fwrite(const void *restrict ptr, size_t size, size_t nobj, FILE *restrict fp);
+
+```cpp
+#include <stdio.h>
+size_t fread(void* ptr, size_t size, size_t nobj, FILE* fp);
+size_t fwrite(const void* ptr, size_t size, size_t nobj, FILE* fp);
+```
+
+## 8.1 参数
+
+- ptr
+
+需要读/写的buffer指针
+
+- size
+
+需要读/写的单元byte数
+
+- nobj
+
+需要读/写多少个单元
+
+- fp
+
+文件流指针
+
+- 返回值
+
+成功：读/写完成的单元个数
+失败：0
+
+## 8.2 Demo
+
+将一个浮点数组的第2~5个元素写至文件上。
+
+```cpp
+float data[10];
+
+if (fwrite(&data[2], sizeof(float), 4, fp) != 4)
+	err_sys("fwrite error");
+````
+
     
 # 9. 定位流
 
