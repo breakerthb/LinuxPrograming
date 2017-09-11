@@ -263,6 +263,10 @@ all:
         done
 ```
 
+或者
+
+<https://github.com/breakerthb/JsonCPPDemo/blob/linux-makefile/Makefile>
+
 - Dynamic Lib
 
 <https://github.com/breakerthb/JsonCPPDemo/blob/linux-makefile/lib_json/Makefile>
@@ -271,7 +275,7 @@ all:
 
 - Process File
 
-<https://github.com/breakerthb/JsonCPPDemo/blob/linux-makefile/Makefile>
+<https://github.com/breakerthb/JsonCPPDemo/blob/linux-makefile/execute/Makefile>
 
 ----
 

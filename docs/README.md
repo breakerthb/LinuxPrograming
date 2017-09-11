@@ -45,6 +45,7 @@
 [GCC使用](https://github.com/breakerthb/LinuxPrograming/blob/master/GCC.md)
 
 [Makefile](https://github.com/breakerthb/LinuxPrograming/blob/master/Makefile.md)
+[Makefile调试方法](https://github.com/breakerthb/LinuxPrograming/blob/master/MakefileDebug.md)
 
 ----
 
